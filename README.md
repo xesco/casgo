@@ -27,7 +27,7 @@ GAME.CAS: CASGOR /CB
 ```
 
 You type only the first line. CASGO then switches to BASIC and types the load
-command itself. When the game's loader asks you to press a key, you press it.
+command itself.
 
 ## Games on two sides
 
