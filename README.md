@@ -74,6 +74,9 @@ The script copies `casgo.dsk` to `work.dsk` and adds the CAS files to the copy, 
 `casgo.dsk` never changes. It also gets past the Carnivore2's boot menu by starting
 the menu's first entry.
 
-## License
+## Author and license
 
-CASGO is released under the MIT license. Copyright (c) 2026 Xesco.
+I wrote CASGO with Claude, Anthropic's AI, to load more cassette games than any other
+CAS loader I know of. The loader I used before is the one that comes with SofaRun, an
+MSX program that starts games from disk. CASGO is released under the MIT license.
+Copyright (c) 2026 Xesco.
