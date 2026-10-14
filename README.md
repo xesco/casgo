@@ -43,6 +43,36 @@ A>CONCAT /B THUNDER.CAS+THUNDERB.CAS THUNDAB.CAS
 A>CASGO THUNDAB.CAS
 ```
 
+## Trying CASGO in openMSX
+
+You can try CASGO in the openMSX emulator on the machine it is tested on, a Philips
+VG-8020 with a Carnivore2 cartridge. This repository holds the setup: `casgo.dsk`, a
+disk image with Nextor and `CASGO.COM` ([NEXTOR-LICENSE.md](NEXTOR-LICENSE.md)), and
+`casgo.tcl`, a script that starts it. openMSX needs two ROM files in its system ROMs
+folder, which this repository cannot hold:
+
+| ROM | Note |
+|---|---|
+| The Philips VG-8020's BIOS and BASIC | openMSX's machine `Philips_VG_8020` names it `vg8020_basic-bios1.rom` |
+| The Carnivore2's firmware, version 2.40, 2.50 or 2.52 | The versions that openMSX's extension `Carnivore2` accepts |
+
+Then follow these steps:
+
+1. Copy your CAS files into the folder that holds `casgo.tcl`. Give them names of up
+   to 8 characters before `.CAS`, because a longer name is cut short on the disk.
+2. In that folder, start openMSX with the script:
+
+   ```
+   openmsx -machine Philips_VG_8020 -ext Carnivore2 -script casgo.tcl
+   ```
+
+3. Wait for the `A>` prompt, and type `CASGO GAME.CAS`. `DIR` lists the files on the
+   disk.
+
+The script copies `casgo.dsk` to `work.dsk` and adds the CAS files to the copy, so
+`casgo.dsk` never changes. It also gets past the Carnivore2's boot menu by starting
+the menu's first entry.
+
 ## License
 
 CASGO is released under the MIT license. Copyright (c) 2026 Xesco.
