@@ -1,0 +1,4 @@
+# Made by openmsx/casgo.tcl, and the CAS files it adds to the disk
+openmsx/work.dsk
+openmsx/*.cas
+openmsx/*.CAS

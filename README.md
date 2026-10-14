@@ -27,10 +27,10 @@ A>CASGO GAME.CAS
 GAME.CAS: CASGOR /CB
 ```
 
-You type only the first line. CASGO then switches to BASIC and types the load
-command itself. CASGO reads the whole CAS file into RAM before the game starts, so
-the game reads its tape from RAM and never calls DOS, which would disturb the game's
-timing and state and could stop the game with a disk error.
+CASGO then switches to BASIC and types the load command itself. CASGO reads the whole
+CAS file into RAM before the game starts, so the game reads its tape from RAM and never
+calls DOS, which would disturb the game's timing and state and could stop the game with
+a disk error.
 
 ## Games on two sides
 
@@ -46,10 +46,11 @@ A>CASGO THUNDAB.CAS
 ## Trying CASGO in openMSX
 
 You can try CASGO in the openMSX emulator on the machine it is tested on, a Philips
-VG-8020 with a Carnivore2 cartridge. This repository holds the setup: `casgo.dsk`, a
-disk image with Nextor and `CASGO.COM` ([NEXTOR-LICENSE.md](NEXTOR-LICENSE.md)), and
-`casgo.tcl`, a script that starts it. openMSX needs two ROM files in its system ROMs
-folder, which this repository cannot hold:
+VG-8020 with a Carnivore2 cartridge. The folder [openmsx](openmsx) holds the setup:
+`casgo.dsk`, a disk image with Nextor and `CASGO.COM`
+([NEXTOR-LICENSE.md](NEXTOR-LICENSE.md)), and `casgo.tcl`, a script that starts it.
+openMSX needs two ROM files in its system ROMs folder, which this repository cannot
+hold:
 
 | ROM | Note |
 |---|---|
@@ -58,9 +59,9 @@ folder, which this repository cannot hold:
 
 Then follow these steps:
 
-1. Copy your CAS files into the folder that holds `casgo.tcl`. Give them names of up
-   to 8 characters before `.CAS`, because a longer name is cut short on the disk.
-2. In that folder, start openMSX with the script:
+1. Copy your CAS files into the folder `openmsx`. Give them names of up to 8
+   characters before `.CAS`, because a longer name is cut short on the disk.
+2. In the folder `openmsx`, start openMSX with the script:
 
    ```
    openmsx -machine Philips_VG_8020 -ext Carnivore2 -script casgo.tcl
