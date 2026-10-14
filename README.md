@@ -27,7 +27,9 @@ GAME.CAS: CASGOR /CB
 ```
 
 You type only the first line. CASGO then switches to BASIC and types the load
-command itself.
+command itself. CASGO reads the whole CAS file into RAM before the game starts, so
+the game reads its tape from RAM and never calls DOS, which would disturb the game's
+timing and state and could stop the game with a disk error.
 
 ## Games on two sides
 
