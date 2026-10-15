@@ -5,3 +5,7 @@ openmsx/*.CAS
 # Downloaded from a release
 CASGO.COM
 openmsx/casgo.dsk
+# Made by make: the build, the downloads and the assembler
+build/
+dl/
+.tools/

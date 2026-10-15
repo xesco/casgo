@@ -76,6 +76,15 @@ The script copies `casgo.dsk` to `work.dsk` and adds the CAS files to the copy, 
 `casgo.dsk` never changes. It also gets past the Carnivore2's boot menu by starting
 the menu's first entry.
 
+## Building
+
+CASGO is written in Z80 assembly, in the folder [src](src). `make` builds
+`build/CASGO.COM`. It downloads the source of the sjasmplus assembler, pinned by
+version and checksum, builds the assembler, and then assembles CASGO. The build needs
+make, curl, a C++ compiler and Python 3. [tools/known.tsv](tools/known.tsv) lists
+the tapes that CASGO recognises by their blocks, with the loading method each needs
+and the bytes it patches in some of them.
+
 ## Author and license
 
 I wrote CASGO with Claude, Anthropic's AI, to load more cassette games than any other
