@@ -7,8 +7,9 @@ Usage:
 
 known.tsv lists the tapes that the detector's rules give the wrong cases, and
 the tapes that load only with a patch, one per row after a header row. Its
-columns: file, cases (loader letters and a memory letter), block, kind, values,
-patches, title and notes; the title and notes are for people. Blocks are counted
+columns: title, cases (loader letters and a memory letter), block, kind, values,
+patches and notes; the title and notes are for people. A cell that spans lines,
+as a long note does, is in double quotes. Blocks are counted
 from 0 at the first header. A len row matches when the blocks from BLOCK on have
 the lengths in VALUES, 2 to 6 of them, comma-separated, in bytes after their
 headers; a bytes row matches when block BLOCK starts with the 8 bytes in VALUES,
@@ -31,6 +32,7 @@ set holds its count of patches, then for each the file offset in 3 bytes, low
 byte first, the old byte, the new byte and a flag, 1 when T0's slot is XORed
 into the new byte.
 """
+import csv
 import sys
 
 
@@ -65,10 +67,12 @@ def entries(path):
     file order, and the patch sets, the first for patch number 1."""
     seen = []
     sets = []
-    for line in open(path):
-        if not line.strip() or line.startswith(("#", "file\t")):
+    with open(path, newline="") as fh:
+        rows = list(csv.reader(fh, delimiter="\t"))
+    for row in rows[1:]:                # the first row holds the column names
+        if not row or row[0].startswith("#"):
             continue
-        f, cases, block, kind, values, text = line.rstrip("\n").split("\t")[:6]
+        f, cases, block, kind, values, text = row[:6]
         ps = patches(path, f, text)
         number = 0
         if ps:
