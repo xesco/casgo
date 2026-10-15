@@ -6,9 +6,9 @@ MSX-DOS 2 prompt with the CAS file's name, and the game then loads as it would f
 tape, but in seconds. This page tells MSX owners how to run it, and two more pages
 cover the rest:
 
-- [LIMITS.md](LIMITS.md) lists the kinds of tape that do not load, and why.
 - [DESIGN.md](DESIGN.md) explains how CASGO works, for anyone who reads or changes
   its source.
+- [LIMITS.md](LIMITS.md) lists the kinds of tape that do not load, and why.
 
 ## Requirements
 
