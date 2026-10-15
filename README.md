@@ -111,7 +111,6 @@ needs and the bytes it patches in some of them.
 
 ## Author and license
 
-I wrote CASGO with Claude, Anthropic's AI, to load more cassette games than any
-other CAS loader I know of. The loader I used before is the one that comes with
-SofaRun, an MSX program that starts games from disk. CASGO is released under the MIT
-license ([LICENSE](LICENSE)). Copyright (c) 2026 Xesco.
+I wrote CASGO with Claude, Anthropic's AI, because I wanted a loader that handles
+more CAS files than the ones I had used. CASGO is released under the MIT license
+([LICENSE](LICENSE)). Copyright (c) 2026 Xesco.
