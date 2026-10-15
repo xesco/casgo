@@ -112,5 +112,5 @@ needs and the bytes it patches in some of them.
 ## Author and license
 
 I wrote CASGO with Claude, Anthropic's AI, because I wanted a loader that handles
-more CAS files than the ones I had used. CASGO is released under the MIT license
+more CAS files than the ones I tried. CASGO is released under the MIT license
 ([LICENSE](LICENSE)). Copyright (c) 2026 Xesco.
