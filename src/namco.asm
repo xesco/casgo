@@ -1,7 +1,6 @@
-; The Namco case (docs/CASES.md, Calls built at run time): one loader calls the
-; tape through a CALL 0000h whose low byte it writes at run time. Stage 1 gives
-; the call the high byte of the table of tape entries, so the call reaches the
-; table whichever low byte the loader writes.
+; The Namco case: a loader that calls the tape through a CALL 0000h whose low
+; byte it writes at run time. Stage 1 gives the call the table of tape entries'
+; high byte, so it reaches the table whatever low byte the loader writes.
 
 ; At the 00h byte at HL: notes the end of the loader's call sequence.
 ; Changes AF, BC and DE.
@@ -17,7 +16,7 @@ namco_check:
         pop hl
         ret
 
-; At a Namco note, in a binary file: CALL 0000h's high byte becomes the table's.
+; At a Namco note in a binary file: CALL 0000h's high byte becomes the table's.
 namco_patch:
         ld a,(pt_binary)
         or a

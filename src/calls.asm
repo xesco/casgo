@@ -1,10 +1,9 @@
-; The calls case (docs/CASES.md, Tape calls): stage 1 rewrites each CALL or JP
-; to TAPION, TAPIN or TAPIOF in the binary files, so that it reaches the table
-; of tape entries in SLTATR. The detector picks this case only for tapes whose
-; loader puts the ROM back in page 0 itself.
+; The calls case: for loaders that put the BIOS ROM back in page 0 and then call
+; the tape directly. Stage 1 points each CALL or JP to TAPION, TAPIN or TAPIOF at
+; the table of tape entries (entries.asm) instead.
 
-; At the 00h byte at HL: notes a CALL or JP (CDh or C3h) whose operand is
-; 00E1h, 00E4h or 00E7h. Changes AF, BC and HL.
+; At the 00h byte at HL: notes a CALL or JP to 00E1h, 00E4h or 00E7h.
+; Changes AF, BC and HL.
 calls_check:
         dec hl
         ld a,(hl)
@@ -25,7 +24,7 @@ calls_check:
         ld a,NOTE_CALL
         jp pl_note
 
-; At a call note, in a binary file: the call's high byte becomes the table's.
+; At a call note in a binary file: the call's high byte becomes the table's.
 calls_patch:
         ld a,(pt_binary)
         or a

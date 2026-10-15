@@ -1,10 +1,8 @@
-; The slot wrappers (docs/DESIGN.md, stage 2 step 4).
-;
-; Assembled for SLTWRK in P3 and copied there by stage 2, which points the
-; wrapped entries of the BIOS copy's jump table at the stubs below. A stub
-; names the ROM entry to call; sw_common switches page 0 to the main ROM, calls
-; that entry with the caller's registers, and switches page 0 back to the slot
-; it had, T0's. The slot routines themselves manage the interrupts.
+; The slot wrappers, assembled for SLTWRK in P3. Stage 2 points these entries of
+; T0's jump table here, so that the slot routines run from the main ROM: each
+; stub names the ROM entry, and sw_common puts the ROM in page 0, calls the entry
+; with the caller's registers, and puts T0 back. The routines handle interrupts
+; themselves.
 
 sw_rdslt:
         push hl         ; the caller's HL, while the stub uses HL
