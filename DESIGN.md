@@ -43,10 +43,13 @@ CASGO works in three stages, one after the other.
 ## The detector and the variants
 
 `CASGO.COM` holds a small program, the detector, and four versions of CASGO, the
-variants. The detector reads the CAS file, picks the variant and the loader cases
-the tape needs, copies that variant over itself and runs it. It prints what it
-picked, such as `GAME.CAS: CASGOR /CB`. You can force a pick with an option before
-the file's name, such as `CASGO /SM GAME.CAS`.
+variants. The detector reads the CAS file and picks two things: the variant, which
+sets where the game's memory and T0 go ([Memory cases](#memory-cases)), and the
+loader cases, which set which fixes the variant applies to the tape's loader
+([Loader cases](#loader-cases)). It then copies the variant over itself and runs it
+with the loader cases as an option. It prints what it picked: `GAME.CAS: CASGOR /CB`
+is the `R` variant with the `C` and `B` loader cases. You can force a pick with an
+option before the file's name, such as `CASGO /SM GAME.CAS`.
 
 The detector picks by rules: it looks for byte patterns in the file that tell which
 kind of loader the tape has. A few tapes have code that no rule tells apart, and
