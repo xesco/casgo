@@ -38,9 +38,11 @@ CASGO works in three stages, one after the other.
    its own tape routines, and puts T0 in page 0. It then types the load command that
    the tape's first file needs, such as `BLOAD"CAS:",R`.
 3. **While the game loads.** Each call to the tape routines takes the next bytes
-   from the data segments. To read a byte, TAPIN puts the byte's data segment in
-   page 0 for two instructions, and every data segment holds those two instructions
-   at the same address, so the code goes on in T0 afterwards.
+   from the data segments. TAPIN runs in T0, in page 0, and reads a byte by putting
+   its data segment in page 0, because pages 1 to 3 belong to the game. The CPU then
+   runs its next instructions from the data segment, so every data segment holds two
+   instructions at that address: one reads the byte, the next puts T0 back in page
+   0.
 
 ## The detector and the variants
 
