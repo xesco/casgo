@@ -1,13 +1,13 @@
-; T0 in the internal RAM, for the I and T variants (docs/CASES.md, T0 in the
-; internal RAM): T0 goes in the internal RAM's page 0, and TAPIN's swap switches
-; page 0's slot instead of its segment. Part of stage 2's code, in page 2.
+; T0 in the internal RAM, for the I and T variants: T0 goes in that RAM's page 0,
+; so that a game that takes the mapper's page 0 for itself misses it, and TAPIN's
+; swap switches page 0's slot instead of its segment. Part of stage 2's code, in
+; page 2.
 
 ; Writes the slot form of TAPIN's swap set-up into T0, seen through the window,
 ; then copies T0 into page 0 of the internal RAM. Page 0 changes meanwhile, so
 ; interrupts are off; this code and its stack are in pages 2 and 3. When the
 ; mapper's slot is expanded, the set-up also selects the mapper's subslot in page
-; 0, through swap_sub (src/tape.asm), because a game can change it, as
-; Aackobase's slot search does.
+; 0, through swap_sub (tape.asm), because a game's slot search can change it.
 t0_to_iram:
         ld a,(RAMAD0)   ; 1000SSPP when expanded, else 000000PP
         rlca
@@ -95,8 +95,8 @@ t0_to_iram:
 ; 0, so the code that runs until it writes T0's segment back comes from the
 ; second RAM's segment of that number. Copies that code, the swap's set-up to
 ; tapin.seg's OUT and swap_sub, into page 0 of the second RAM for each data
-; segment, then puts T0's segment back (docs/CASES.md, T0 in a second RAM on an
-; MSX2). Runs with page 0 in the second RAM and interrupts off.
+; segment, then puts T0's segment back. Runs with page 0 in the second RAM and
+; interrupts off.
 swap_copies:
         ld hl,tp_segs+WINDOW    ; the list of data segments, in T0
         ld b,TP_SEGS_MAX
@@ -122,7 +122,7 @@ swap_copies:
         ret
         ENDIF
 
-; TAPIN's swap set-up in the I and T variants (src/tape.asm): the data segment in
+; TAPIN's swap set-up in the I and T variants (tape.asm): the data segment in
 ; the mapper's page 0, then B = the slots as they are, with the internal RAM in
 ; page 0, and A = the same with the mapper in page 0, for the swap's OUT (C),A
 ; and OUT (C),B with C = the slot register.

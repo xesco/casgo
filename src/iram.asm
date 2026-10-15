@@ -1,13 +1,12 @@
-; The internal RAM, for the R, I and T variants (docs/CASES.md, Internal RAM
-; mode): in R and I the game's pages 2 and 3 run in an MSX1's own RAM, as on a
-; cassette machine, and in I and T T0 is in its page 0. Part of stage 2's code,
-; in page 2.
+; The internal RAM, for the R, I and T variants. In R and I the game's pages 2
+; and 3 run in an MSX1's own RAM, as on a cassette machine, and in I and T T0 is
+; in its page 0. Part of stage 2's code, in page 2.
 
 ; Finds the internal RAM: the first primary slot, not expanded and not page 3's,
 ; with RAM at FFFEh, and in the I and T variants with RAM at 3FFEh too, where T0
 ; goes. In the T variants, when there is none, it takes the first second RAM
 ; instead: a subslot with RAM at 3FFEh in an expanded primary slot that is not
-; page 3's (docs/CASES.md, T0 in a second RAM on an MSX2). Sets iram_slot to the
+; page 3's, as an MSX2's own RAM is beside a RAM cartridge. Sets iram_slot to the
 ; primary slot, iram_sub to the subslot or 0FFh, and iram_toggle to the XOR of
 ; the primary slot's bits and page 3's, in bits 7-6, or iram_toggle to 0 when
 ; there is none. Stage 1 calls it from page 2, with interrupts off meanwhile: the
