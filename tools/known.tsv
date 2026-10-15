@@ -2,38 +2,38 @@ title	cases	block	kind	values	patches	notes
 CASGO's test tape	BM	0	len	16,784	-	CASGO's own test tapes, which check the table and the patches.
 CASGO's test tape	SM	1	bytes	00904d9100902a4a	-	CASGO's own test tapes, which check the table and the patches.
 CASGO's test tape	PM	0	len	16,562	44=4E4F>4F4B	CASGO's own test tapes, which check the table and the patches.
-009 - Mini Super Sprites	PI	4	len	24,391	-	
-017-Mini Super Sprites	PI	4	len	24,391	-	
-032-Robot Wars	BT	39	len	16,378	-	
-087-Panel Panique	BI	36	len	24,3530	-	
-A-TEAM (1988)(Zafiro)	BR	10	len	16,10448	-	
-Aliantantor dump di Andrea bendoni	BM	8	len	24,20823	-	
+Mini Super Sprites	PI	4	len	24,391	-	
+Mini Super Sprites	PI	4	len	24,391	-	
+Robot Wars	BT	39	len	16,378	-	
+Panel Panique	BI	36	len	24,3530	-	
+The A-Team (1988)(Zafiro)	BR	10	len	16,10448	-	
+Aliantantor	BM	8	len	24,20823	-	
 Buster Block (1985)(Kuma Computers)	BM	10	len	16,21766	-	
 Comando Tracer (1989)(Dinamic Software)(es)	BM	1	len	256,16,7112,16,16776	-	
 Comando Tracer (1989)(Dinamic Software)(es)	BM	9	len	808,16	-	
 Dustin (1987)(Dinamic Software)(es)	BM	6	len	16,21275	-	
 Football Manager - World Cup Edition (1990)(Addictive Games)(es)	PI	8	len	16,20832	-	
 Football Manager - World Cup Edition (1990)(Addictive)	PI	8	len	16,20679	-	
-Mandragore (Infogrames)(1987)(en)(Tape 1 Side A)	CM	1	len	32,840	-	
+Mandragore (1987)(Infogrames)(en)(Tape 1 Side A)	CM	1	len	32,840	-	
 Ocean Conqueror (1987)(Mastertronic)	BR	9	len	16,16390	-	
 Ormuz (1988)(Iber Soft)(es)	BR	12	len	19360,16	-	
 Ormuz (1988)(Iber Soft)(es)	BR	12	len	19360,16	-	
 Panel Panic (1986)(Eaglesoft)	BI	3	len	19624,456	-	
 Panel Panic (1986)(Eaglesoft)	BI	36	len	16,3530	-	
 Robot Wars (1986)(Eaglesoft)	BT	39	len	16,378	-	
-Robot Wars (ByteBusters) (Aackosoft - Eaglesoft) (Compulogical)	BT	39	len	16,378	-	
+Robot Wars (ByteBusters)(Aackosoft - Eaglesoft)	BT	39	len	16,378	-	
 Sabrina (1989)(Iber Soft)(es)	PM	34	len	16,10375	-	
 Silicon Dreams II - Return to Eden (1984)(Level 9 Computing)	BI	2	len	24584,17665	-	
 Space Shuttle - A Journey into Space (1986)(Activision)	NI	4	len	16,40193	-	
 Spitfire '40 (1986)(Mirrorsoft)	CBM	14	len	16,16903	-	
 Spy vs Spy II - The Island Caper (1987)(Databyte)	CBM	7	len	1376,648	-	
 Super Sprites (1986)(Idealogic)(es)	PI	4	len	16,391	-	
-super msx 19 lato A	BM	14	len	264,265	-	
-super_msx_6_lato_A	ST	19	len	384,20886	-	
-SUPER09B.CAS	SM	36	len	17,19970	-	
-The Growing Pains Of Adrian Mole, part 2	BT	11	bytes	4c3981000010df7c	-	
+Super MSX 19, side A	BM	14	len	264,265	-	
+Super MSX 6, side A	ST	19	len	384,20886	-	
+Super MSX 9, side B	SM	36	len	17,19970	-	
+The Growing Pains of Adrian Mole - Part 2 (1987)(Level 9 Computing)	BT	11	bytes	4c3981000010df7c	-	
 The Ice King (1986)(CDS Software)	BM	7	len	16,28007	-	
-transball-en	BT	0	len	19,256	-	
+Transball (English)	BT	0	len	19,256	-	
 Transball (2016)(Santi Ontanon)	BT	0	len	19,256	-	
 Triple Comando (1988)(Dro Soft)(es)(Side A)	SM	10	len	11560,20008	-	
 Tritorn (1986)(Xain)	PM	1	len	1016,16	-	
@@ -47,10 +47,10 @@ Gemini Wing (1989)(Virgin Mastertronic)(Side A)	SI	2	len	16,12408	3267=0002>C201
 BMX Simulator (1987)(Codemasters)	BT	3	len	16,9224	26A0=2010>00	BMX Simulator: when page 3's slot is expanded, its loader sets only the subslot register for pages 0 and 1, and copies its code into page 0, over T0; its test of EXPTBL's byte becomes two NOPs, so that it puts page 3's slot in pages 0 and 1, which the T case keeps away from T0.
 Bestial Warrior (1989)(Dinamic Software)(es)	BR	3	len	16,9512	25F1=80>00	Bestial Warrior: its slot module, which runs from page 3, puts page 3 in the slot of page 0 to set that slot's subslot register when the slot is expanded, and takes its own code away. Page 0 holds T0 in the Carnivore2's expanded slot 1, where a cassette machine holds the BIOS ROM in slot 0. The module's test of EXPTBL's expanded bit becomes AND 00h, and the entry picks R, whose T0 is out of the way of the game's search for RAM for page 0, from slot 3 down.
 Bestial Warrior (1989)(Dinamic Software)(es)	BR	4	len	16,15704	1D1=80>00	Bestial Warrior: its slot module, which runs from page 3, puts page 3 in the slot of page 0 to set that slot's subslot register when the slot is expanded, and takes its own code away. Page 0 holds T0 in the Carnivore2's expanded slot 1, where a cassette machine holds the BIOS ROM in slot 0. The module's test of EXPTBL's expanded bit becomes AND 00h, and the entry picks R, whose T0 is out of the way of the game's search for RAM for page 0, from slot 3 down.
-Engesoft MSXK-06 - Lado B	BI	0	len	24,267	4182=28>18,81F9=28>18	Spelunker (Engesoft's tape): each part takes the slots for its copy of the ROM from the slot register, and expects F0h, the slots of BASIC on a cassette machine with its RAM in slot 3; any other value sends the copy to slot 2. Under CASGO page 0 holds T0, so the value differs; the test's JR Z becomes JR, so that each part copies into slot 3, the internal RAM.
-SuperMSX18-LatoA	BI	10	len	16,16185	5BB1=08>80	Super MSX 18: the code that starts TIDDLE's BASIC program, which it BLOADs over the program area, writes the first line's link to 0801h instead of 8001h. A cassette machine has ROM there; CASGO has T0, whose BIOS copy the write breaks. The address becomes 8001h.
+Engesoft MSXK-06, side B	BI	0	len	24,267	4182=28>18,81F9=28>18	Spelunker (Engesoft's tape): each part takes the slots for its copy of the ROM from the slot register, and expects F0h, the slots of BASIC on a cassette machine with its RAM in slot 3; any other value sends the copy to slot 2. Under CASGO page 0 holds T0, so the value differs; the test's JR Z becomes JR, so that each part copies into slot 3, the internal RAM.
+Super MSX 18, side A	BI	10	len	16,16185	5BB1=08>80	Super MSX 18: the code that starts TIDDLE's BASIC program, which it BLOADs over the program area, writes the first line's link to 0801h instead of 8001h. A cassette machine has ROM there; CASGO has T0, whose BIOS copy the write breaks. The address becomes 8001h.
 Rocky (1985)(Dinamic Software)(es)	BI	3	len	184,16	6581=3EFFD3A83EAA32FFFF>00,6595=3EF0D3A8FB>00,AC49=3EFFD3A83EAA32FFFF>00,AC5D=3EF0D3A8FB>00	Rocky, the modified dump: the end of its blocks 9 and 11 puts slot 3 in every page before it copies 467Fh bytes to 0300h, where the other dump copies them into the ROM; in I the copy lands on T0. Those bytes become the other dump's. The entry matches both dumps, and the old bytes only this one.
 Narco Police (1990)(Dinamic Software)(Side A)	BI	5	len	29648,49267	22E=E6>F6,22F=FC>S	Narco Police, the dump with another version of the stub loader: its stub takes the slots for the tape calls as IN D,(C) / LD A,D / AND 0FCh / LD E,A, which puts the BIOS ROM in page 0, and no rule finds it. AND 0FCh becomes OR with T0's slot, as the stub case does for IN A,(0A8h) / LD H,A / AND 0FCh / LD L,A.
 Aackobase II (1985)(Aackosoft)(nl)	PR	2	len	16,14608	3B36=0C>09	Aackobase II: its block PROTSL searches the slots for RAM from 84h, slot 0-1, up, and its probe of slot 1-1 leaves slot 1's subslot register selecting subslot 1 for page 0, which takes T0, in the mapper's subslot, out of page 0 in R. The search starts at 87h, slot 3, which it takes for RAM on a cassette machine too. The game then writes its RAM in every page of slot 3, so the entry picks R, whose T0 is out of the way, and the plain case, whose loader the BASIC case's changes break.
 Aackobase II (1985)(Aackosoft)(nl)	PR	2	len	24,14608	3B56=0C>09	Aackobase II: its block PROTSL searches the slots for RAM from 84h, slot 0-1, up, and its probe of slot 1-1 leaves slot 1's subslot register selecting subslot 1 for page 0, which takes T0, in the mapper's subslot, out of page 0 in R. The search starts at 87h, slot 3, which it takes for RAM on a cassette machine too. The game then writes its RAM in every page of slot 3, so the entry picks R, whose T0 is out of the way, and the plain case, whose loader the BASIC case's changes break.
-SUPER05A	SI	4	len	16,416	3A4=80>88	Gino e Pino, the first program of Super MSX 5: its loader searches the slots for RAM from 80h up, finds the internal RAM first, puts it in page 0 and loads 42 KB there, over T0 in I. The search starts at 88h, which skips subslots 0 and 1 and finds the mapper on a machine whose mapper is in subslot 2, as the Carnivore2's is, or in a slot that is not expanded.
+Super MSX 5, side A	SI	4	len	16,416	3A4=80>88	Gino e Pino, the first program of Super MSX 5: its loader searches the slots for RAM from 80h up, finds the internal RAM first, puts it in page 0 and loads 42 KB there, over T0 in I. The search starts at 88h, which skips subslots 0 and 1 and finds the mapper on a machine whose mapper is in subslot 2, as the Carnivore2's is, or in a slot that is not expanded.
