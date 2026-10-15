@@ -1,9 +1,9 @@
 # Limits
 
-CASGO loads a tape by giving the game's loader the tape's bytes from RAM, in place
-of the cassette routines of the MSX's BIOS. A tape fails when its loader or its game
-reaches the tape, or the memory, in a way that CASGO does not cover. This page lists
-those kinds of tape, for anyone whose game does not load.
+CASGO replaces the BIOS's cassette routines with its own, which give the game's
+loader the tape's bytes from RAM. A tape fails when its loader or its game reaches
+the tape, or the memory, in a way that CASGO does not cover. This page lists those
+kinds of tape, for anyone whose game does not load.
 
 ## Tapes that do not load
 
