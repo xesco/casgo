@@ -1,20 +1,28 @@
-; A variant of CASGO: starts a cassette game from a CAS file (docs/DESIGN.md).
+; A variant of CASGO: starts a cassette game from a CAS file, in three stages.
 ;
-; Stage 1 (DOS) checks the BIOS, takes the CAS file from the command line and
-; picks its load command, reads the file into the data segments, patches the
-; loaders of the variant's case in it, and enters BASIC. Stage 2 (BASIC) makes
-; P3 a cassette-only page 3 with the slot wrappers (src/slots.asm), sets up page
-; 3 for the variant's case, puts the BIOS copy with CASGO's tape routines
-; (src/tape.asm) in T0, switches to T0, clears the screen and types
-; CLEAR200,&HF380:A=USR(0), whose second USR call fills BASIC's string space
-; with the power-on pattern, and the load command. Stage 3 is the tape routines.
+; Stage 1, in DOS: checks the BIOS, takes the CAS file from the command line and
+; picks its load command, reads the whole file into mapper segments, patches the
+; loaders of the variant's cases, and enters BASIC.
+; Stage 2, in BASIC: cleans page 3 of the disk system, installs the slot
+; wrappers (slots.asm), puts a copy of the BIOS with CASGO's tape routines in
+; page 0, and types the load command.
+; Stage 3, the game: the tape routines (tape.asm) give it the file's bytes from
+; RAM. No DOS call happens from here on.
 ;
-; The Makefile assembles one variant for each case (docs/DESIGN.md, Variants):
-; CASE_C, CASE_N, CASE_S and CASE_B are 1 for the variant's loader cases, calls,
-; Namco, stub and BASIC, and 0 for the others; MEM_R, MEM_I or MEM_T is 1 for
-; the internal RAM case, for T0 in the internal RAM with pages 2 and 3 there
-; too, or for T0 in the internal RAM with pages 2 and 3 in the mapper. The
-; symbols below say which parts of the code the variant's cases need.
+; Terms used in the source:
+;   T0        the RAM segment in page 0 that holds CASGO's copy of the BIOS
+;   P3        the segment in page 3, cleaned to be a cassette machine's page 3
+;   data segments  the segments that hold the CAS file, 16381 bytes in each
+;   window    page 1 (4000h), where stage 2 puts a segment such as T0 to write it
+;   loader cases   C (calls), N (Namco), S (stub), B (BASIC): kinds of loader
+;             that reach the tape in a way the plain case does not catch
+;   memory cases   M (all in the mapper), R (pages 2 and 3 in an MSX1's own
+;             RAM), I (T0 there too), T (only T0 there, or in a second RAM)
+;
+; The Makefile assembles one variant per memory case, with MEM_R, MEM_I or MEM_T
+; set to 1, and CASE_C, CASE_N, CASE_S and CASE_B set to 1 in every variant; the
+; command line's option says which loader cases run. The symbols below say which
+; parts of the code a variant needs.
 SCAN        equ CASE_C || CASE_N || CASE_S || CASE_B ; stage 1 scans and patches
 TRAMPOLINES equ CASE_C || CASE_N                ; the table of tape entries
 T0_ROUTINE  equ TRAMPOLINES || CASE_S || CASE_B ; tr_t0, in SLTWRK
@@ -90,18 +98,18 @@ OUTDO   equ 0018h           ; the RST 18h entry of OUTDO (Red Book ch. 4)
 TAPE_BASE equ 19DDh
 TAPE_END  equ 1B45h
 
-; Stage 2 runs in page 2, whose segment DOS and BASIC share, so it is still
-; there in BASIC (docs/DESIGN.md, stage 1 step 5).
+; Stage 2 runs in page 2, whose segment DOS and BASIC share, so it is still there in
+; BASIC.
 STAGE2  equ 0A000h
 
-; Each data segment holds DATA_SIZE bytes of the CAS file: 16 KB less the
-; hole, the 3 bytes of TAPIN's swap (src/tape.asm). Stage 2 copies page 2 of
-; BASIC into the internal RAM with a copier at COPIER, in P3.
+; Each data segment holds DATA_SIZE bytes of the CAS file: 16 KB less the hole, the
+; 3 bytes of TAPIN's swap (tape.asm). Stage 2 copies page 2 of BASIC into the
+; internal RAM with a copier at COPIER, in P3.
 DATA_SIZE equ 4000h-3
 COPIER  equ 0C000h
 
 ; The BASIC case: the BLOAD names stage 1 notes, and the binary files whose bytes
-; below 4000h TAPIN drops (docs/CASES.md, BASIC's own loads).
+; below 4000h TAPIN drops.
 NAMES_MAX equ 8
 DROPS_MAX equ 4
 
@@ -470,10 +478,9 @@ find_type:
         jr nz,.copy_command
         ret
 
-; Reads the CAS file into the data segments, DATA_SIZE bytes in each, after
-; checking that the free segments hold it (docs/DESIGN.md, stage 1 steps 3-5).
-; In the variants that patch the file, it also scans each read for the patterns
-; of the variant's cases (src/scan.asm).
+; Reads the CAS file into the data segments, DATA_SIZE bytes in each, after checking
+; that the free segments hold it. In the variants that patch the file, it also scans
+; each read for the patterns of the variant's cases (scan.asm).
 preload:
         ld de,cas_path
         ld a,1          ; open for reading only
@@ -660,11 +667,10 @@ preload:
         ld c,CLOSE
         jp BDOS
 
-; Applies patch set kp_set, a known tape's, which the option's number selects
-; (docs/CASES.md, Known tapes): when each patch's offset is in the file and its
-; old byte is the file's byte there, each byte becomes its patch's new byte,
-; XORed with T0's primary slot when the patch's flag is 1. Else the file stays
-; as it is.
+; Applies patch set kp_set, a known tape's, which the option's number selects: when
+; each patch's offset is in the file and its old byte is the file's byte there, each
+; byte becomes its patch's new byte, XORed with T0's primary slot when the patch's
+; flag is 1. Else the file stays as it is.
 apply_patches:
         ld a,(kp_set)
         or a
@@ -1001,9 +1007,9 @@ crlf:
 
         include "patterns.asm"
 
-; The load command for each file type (docs/DESIGN.md, stage 1 step 1). The
-; CLEAR before it gives the game memory up to F380h, as on a machine without
-; disk (Red Book ch. 6, HIMEM), and the USR call after it runs stage2_fill.
+; The load command for each file type. The CLEAR before it gives the game memory up
+; to F380h, as on a machine without disk (Red Book ch. 6, HIMEM), and the USR call
+; after it runs stage2_fill.
 clear_command:
         db "CLEAR200,&HF380:A=USR(0)",13
 clear_command_size equ $-clear_command
@@ -1101,9 +1107,8 @@ stage2_setup:
         ENDIF
 
         IF HPARD_HOOK
-        ; H.PARD: CALL tr_t0, then the RET already there, so that BASIC's own
-        ; loads start with T0 in page 0 (docs/CASES.md, BASIC's own loads). Only
-        ; the stub and BASIC cases set it.
+        ; H.PARD: CALL tr_t0, then the RET already there, so that BASIC's own loads
+        ; start with T0 in page 0. Only the stub and BASIC cases set it.
         ld a,(lcase)
         and LC_S|LC_B
         jr z,.no_hpard

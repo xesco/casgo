@@ -1,6 +1,5 @@
-; The scan of the CAS file for the loader cases that patch it: calls, Namco,
-; stub and BASIC (docs/CASES.md, Loader cases). Part of stage 1, in the variants of
-; those cases.
+; The scan of the CAS file for the loader cases that patch it: calls, Namco, stub
+; and BASIC. Part of stage 1, in the variants of those cases.
 ;
 ; While preload reads the file, scan_check looks back from each byte that can
 ; end a pattern and notes where each block header and each pattern of the
@@ -283,8 +282,7 @@ patch_tape:
 ; starts with JP 9030h after the file's 6 bytes of addresses, as CasLink3's parts
 ; do, and the five bytes after RST 30h are 0, the RST 30h and those bytes become
 ; CALL 006Fh, INIT32, which sets screen 1 as the boot does, and a JP to the ROM
-; image's start, which the part holds 7 bytes after its own (docs/CASES.md, ROM
-; images started by a reset).
+; image's start, which the part holds 7 bytes after its own.
 reset_patch:
         ld a,(pt_binary)
         or a
@@ -461,14 +459,13 @@ pt_write_x:
         pop af
         jp pt_write
 
-; Keeps the checksum of the block from pt_block to pt_end, which the patches
-; changed by pt_xd as an XOR and pt_sd as a sum (docs/CASES.md, Loader cases).
-; The checksum byte is the block's last byte that is not 0, among its last 8,
-; before the padding. When the block's bytes XORed to 0 before the patches, it
-; takes pt_xd as an XOR. Else, when it was the sum of the bytes before it, from
-; the block's first byte or after 1 or 2 bytes of length, it becomes the new
-; sum. Else, when it made the sum of those bytes 0, it loses pt_sd, so that the
-; sum stays 0. Then pt_xd and pt_sd start again from 0.
+; Keeps the checksum of the block from pt_block to pt_end, which the patches changed
+; by pt_xd as an XOR and pt_sd as a sum. The checksum byte is the block's last byte
+; that is not 0, among its last 8, before the padding. When the block's bytes XORed
+; to 0 before the patches, it takes pt_xd as an XOR. Else, when it was the sum of
+; the bytes before it, from the block's first byte or after 1 or 2 bytes of length,
+; it becomes the new sum. Else, when it made the sum of those bytes 0, it loses
+; pt_sd, so that the sum stays 0. Then pt_xd and pt_sd start again from 0.
 block_fix:
         call head_fix
         ld a,(pt_xd)
@@ -647,11 +644,10 @@ block_fix:
         ld a,(hl)
         ret
 
-; Keeps the 16-bit sum that a header block of Ben Koks' cassette loader holds
-; for the block after it (docs/CASES.md, Loader cases): when the block before
-; pt_block is 24 bytes long and starts with ABh CDh EFh, its bytes 18 and 19
-; take pt_sd16, and its byte 22 changes so that its first 23 bytes still sum to
-; 0. Then pt_sd16 starts again from 0.
+; Keeps the 16-bit sum that a header block of Ben Koks' cassette loader holds for
+; the block after it: when the block before pt_block is 24 bytes long and starts
+; with ABh CDh EFh, its bytes 18 and 19 take pt_sd16, and its byte 22 changes so
+; that its first 23 bytes still sum to 0. Then pt_sd16 starts again from 0.
 head_fix:
         ld hl,(pt_sd16)
         ld a,h

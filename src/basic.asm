@@ -1,11 +1,11 @@
-; The BASIC case's part of stage 1 (docs/CASES.md, BASIC's own loads): it finds
-; the binary files that BASIC's BLOAD loads into page 0, where a cassette
-; machine's ROM drops their bytes, and drops those bytes too. scan_check notes
-; the quote after each BLOAD; patch_tape reads the file name there, and the
-; headers of the binary files, and changes the start address of each file to
-; drop; drop_counts then gives TAPIN its counts of bytes to deliver and drop.
-; It also changes the code in binary files that puts the ROM back in pages 0
-; and 1, so that it puts T0 in page 0, for loaders that clear the hook H.PARD.
+; The BASIC case's part of stage 1: it finds the binary files that BASIC's BLOAD
+; loads into page 0, where a cassette machine's ROM drops their bytes, and drops
+; those bytes too. scan_check notes the quote after each BLOAD; patch_tape reads the
+; file name there, and the headers of the binary files, and changes the start
+; address of each file to drop; drop_counts then gives TAPIN its counts of bytes to
+; deliver and drop. It also changes the code in binary files that puts the ROM back
+; in pages 0 and 1, so that it puts T0 in page 0, for loaders that clear the hook
+; H.PARD.
 
 ; At the quote at HL: notes it when BLOAD comes before it, as the token CFh or
 ; as text, with at most two spaces between. Keeps HL.

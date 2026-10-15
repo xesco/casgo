@@ -1,5 +1,5 @@
-; CASGO's detector: reads a CAS file, picks the variant of CASGO that loads it,
-; and loads that variant in its own place (docs/DESIGN.md, The detector).
+; CASGO's detector: reads a CAS file, picks the variant of CASGO that loads it, and
+; loads that variant in its own place.
 ;
 ; It finds the machine's internal RAM, reads the CAS file once in parts of 16
 ; KB and applies the rules of the cases to it, prints the variant, and then
@@ -154,9 +154,8 @@ take_path:
         ld de,path_too_long
         jp exit_message
 
-; Reads the CAS file once and applies the rules (docs/CASES.md,
-; Loader cases). A rule's pattern ends at one of the bytes that scan_table
-; marks; only there does check look back for the rest.
+; Reads the CAS file once and applies the rules. A rule's pattern ends at one of the
+; bytes that scan_table marks; only there does check look back for the rest.
 scan_file:
         ld de,cas_path
         ld a,1          ; open for reading only
@@ -716,9 +715,9 @@ move_check:
         ld (d_move),a
         ret
 
-; The ends of the code that puts the slot of page 2 or 3, or slot 3, in page 0
-; after IN A,(0A8h), each its length and then its bytes (docs/CASES.md, T0 in the
-; internal RAM). Their last bytes are marked in scan_table.
+; The ends of the code that puts the slot of page 2 or 3, or slot 3, in page 0 after
+; IN A,(0A8h), each its length and then its bytes. Their last bytes are marked in
+; scan_table.
 move_tails:
         db 8, 0CBh, 2Fh, 0CBh, 2Fh, 0CBh, 2Fh, 0CBh, 2Fh  ; SRA A four times
         db 8, 0CBh, 3Fh, 0CBh, 3Fh, 0CBh, 3Fh, 0CBh, 3Fh  ; SRL A four times
@@ -780,9 +779,8 @@ compare:
         pop hl
         ret
 
-; Ends a block: the calls rule holds if this block writes the slot register
-; with OUT (0A8h),A and this block or the one before calls the tape directly
-; (docs/CASES.md, Tape calls).
+; Ends a block: the calls rule holds if this block writes the slot register with
+; OUT (0A8h),A and this block or the one before calls the tape directly.
 block_end:
         ld a,(d_call)
         ld hl,d_prev
@@ -871,9 +869,8 @@ pick:
         or a
         ld a,"S"
         jr nz,.letter
-        ; The BASIC case: the file loads with BLOAD, and it writes the slot
-        ; register or holds a binary file that loads from page 0 on
-        ; (docs/CASES.md, BASIC's own loads).
+        ; The BASIC case: the file loads with BLOAD, and it writes the slot register
+        ; or holds a binary file that loads from page 0 on.
         ld a,(d_out_any)
         ld b,a
         ld a,(d_page0)
@@ -906,12 +903,10 @@ pick:
 .picked:
         ; R when the machine has internal RAM; with RAM in its page 0 too, T for
         ; code that needs it (d_t), and I when the loader case is S, or the file
-        ; writes the slot register,
-        ; never reads EXPTBL and never takes the internal RAM for page 0, by a
-        ; slot move or the BASIC case's slot calls; M on a machine without
-        ; internal RAM (docs/CASES.md, T0 in the internal RAM). On a machine
-        ; with a second RAM instead, the same rules give T for I and M for R
-        ; (docs/CASES.md, T0 in a second RAM on an MSX2).
+        ; writes the slot register, never reads EXPTBL and never takes the internal
+        ; RAM for page 0, by a slot move or the BASIC case's slot calls; M on a
+        ; machine without internal RAM. On a machine with a second RAM instead, the
+        ; same rules give T for I and M for R.
         ld a,(has_r)
         ld b,a
         ld a,(has_t2)
@@ -976,11 +971,10 @@ pick:
         ld (hl),0
         ret
 
-; The known tapes (docs/CASES.md, Known tapes): a tape matches an entry of
-; known_table when its blocks from number N on have the entry's lengths, or block
-; N starts with the entry's bytes. The blocks are counted from the first header,
-; and a block's length is the bytes from the end of its header to the next header
-; or to the end of the file.
+; The known tapes: a tape matches an entry of known_table when its blocks from
+; number N on have the entry's lengths, or block N starts with the entry's bytes.
+; The blocks are counted from the first header, and a block's length is the bytes
+; from the end of its header to the next header or to the end of the file.
 
 ; At a header whose last byte is at HL: ends the block before it. Keeps HL.
 kt_header:
@@ -1303,7 +1297,7 @@ print_choice:
         jp BDOS
 
 ; Runs the variant, whose image follows the detector in CASGO.COM, as DOS runs a
-; program, with the same command line (docs/DESIGN.md, Loading the variant).
+; program, with the same command line.
 load_variant:
         ld a,(variant+5) ; the memory letter
         ld hl,images
@@ -1468,11 +1462,10 @@ cas_path: ds PATH_SIZE
 probe_image:
         disp PROBE
 
-; Finds whether the machine has internal RAM: a primary slot, not expanded and
-; not page 3's, with RAM at FFFEh (has_r), and such a slot with RAM at 3FFEh
-; too (has_i), as the R and I variants search (src/iram.asm). Interrupts are
-; off meanwhile, and the stack is here, because the search switches pages 3
-; and 0.
+; Finds whether the machine has internal RAM: a primary slot, not expanded and not
+; page 3's, with RAM at FFFEh (has_r), and such a slot with RAM at 3FFEh too
+; (has_i), as the R and I variants search (iram.asm). Interrupts are off meanwhile,
+; and the stack is here, because the search switches pages 3 and 0.
 probe:
         di
         ld (p_sp),sp
@@ -1523,10 +1516,10 @@ probe:
         ld a,(has_r)
         or a
         jr nz,.done
-        ; No internal RAM: look for a second RAM, a subslot with RAM at 3FFEh in
-        ; an expanded primary slot after page 3's, as the T variants search
-        ; (src/iram.asm). Only a slot after the mapper's counts, because the
-        ; loaders that need T take the first RAM from slot 0 up.
+        ; No internal RAM: look for a second RAM, a subslot with RAM at 3FFEh in an
+        ; expanded primary slot after page 3's, as the T variants search (iram.asm).
+        ; Only a slot after the mapper's counts, because the loaders that need T
+        ; take the first RAM from slot 0 up.
         ld a,(p_a8)
         rlca
         rlca
@@ -1633,8 +1626,7 @@ p_stack_top:
         ent
 probe_size equ $-probe_image
 
-; The four variants, as their .COM files are, which load_variant copies to 0100h
-; (docs/DESIGN.md, Loading the variant).
+; The four variants, as their .COM files are, which load_variant copies to 0100h.
 image_m:
         incbin "CASGOM.COM"
 image_r:
