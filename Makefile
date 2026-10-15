@@ -12,6 +12,10 @@
 
 SJASMPLUS_VERSION := 1.24.0
 
+# CASGO's version, which its usage message shows: the git tag without its v, with
+# the commits since it when there are any. The release workflow sets it.
+VERSION ?= $(or $(patsubst v%,%,$(shell git describe --tags --always --dirty 2>/dev/null)),unknown)
+
 DL        := dl
 TOOLS     := .tools
 BUILD     := build
@@ -23,7 +27,7 @@ SJASMPLUS := $(TOOLS)/sjasmplus
 MEMORY_CASES := M R I T
 VARIANT_COMS := $(foreach m,$(MEMORY_CASES),$(BUILD)/CASGO$(m).COM)
 
-.PHONY: all release clean
+.PHONY: all release clean FORCE
 all: $(BUILD)/CASGO.COM
 release: $(BUILD)/CASGO.COM $(BUILD)/casgo.dsk
 
@@ -34,7 +38,13 @@ $(BUILD)/known.asm: tools/known.py tools/known.tsv
 
 $(BUILD)/patches.asm: $(BUILD)/known.asm
 
-$(BUILD)/CASGO.COM: src/detect.asm src/patterns.asm $(BUILD)/known.asm $(VARIANT_COMS) $(SJASMPLUS)
+# Rewritten only when the version changes, so that make rebuilds only then.
+$(BUILD)/version.asm: FORCE
+	@mkdir -p $(BUILD)
+	@echo '        db "$(VERSION)"' > $@.new
+	@cmp -s $@.new $@ && rm $@.new || mv $@.new $@
+
+$(BUILD)/CASGO.COM: src/detect.asm src/patterns.asm $(BUILD)/known.asm $(BUILD)/version.asm $(VARIANT_COMS) $(SJASMPLUS)
 	$(SJASMPLUS) --nologo --msg=war -I$(BUILD) --raw=$@ --lst=$(BUILD)/detect.lst $<
 
 $(BUILD)/casgo.dsk: tools/mkdisk.py $(DL)/NEXTOR.SYS $(DL)/COMMAND2.COM $(BUILD)/CASGO.COM

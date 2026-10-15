@@ -1399,7 +1399,9 @@ print_dos:
         include "patterns.asm"
 
 usage:
-        db "Usage: CASGO [/CASES] FILE.CAS",13,10,"$"
+        db "CASGO "
+        include "version.asm"   ; the version, which the Makefile writes
+        db 13,10,"Usage: CASGO [/CASES] FILE.CAS",13,10,"$"
 unknown_option:
         db "Unknown option: $"
 bload_text:

@@ -37,6 +37,25 @@ whole CAS file into RAM before the game starts, so the game reads its tape from 
 and never calls DOS, which would disturb the game's timing and state and could stop
 the game with a disk error.
 
+## Forcing the loading method
+
+CASGO picks the loading method from the CAS file. When a game does not load with
+that method, you can force another with an option before the file's name: up to two
+loader letters, a memory letter, or both. CASGO picks what the option leaves out:
+
+```
+A>CASGO /M GAME.CAS
+GAME.CAS: CASGOM /CB
+```
+
+| Letters | What they choose |
+|---|---|
+| `P`, `C`, `N`, `S`, `B` | How the tape's loader reaches the tape |
+| `M`, `R`, `I`, `T` | Where the game's memory and CASGO's copy of the BIOS go |
+
+[DESIGN.md](DESIGN.md#loader-cases) describes each letter. On an MSX2 with a RAM
+cartridge, a few games load only with `/M`.
+
 ## Games on two sides
 
 A game that fills both sides of a tape comes as one CAS file for each side, and
@@ -83,7 +102,8 @@ the menu's first entry.
 ## Building
 
 CASGO is written in Z80 assembly, in the folder [src](src). `make` builds
-`build/CASGO.COM`. It downloads the source of the sjasmplus assembler, pinned by
+`build/CASGO.COM`, and `make release` also builds `build/casgo.dsk`, the disk image
+for openMSX. The build downloads the source of the sjasmplus assembler, pinned by
 version and checksum, builds the assembler, and then assembles CASGO. The build
 needs make, curl, a C++ compiler and Python 3. [tools/known.tsv](tools/known.tsv)
 lists the tapes that CASGO recognises by their blocks, with the loading method each
@@ -94,4 +114,4 @@ needs and the bytes it patches in some of them.
 I wrote CASGO with Claude, Anthropic's AI, to load more cassette games than any
 other CAS loader I know of. The loader I used before is the one that comes with
 SofaRun, an MSX program that starts games from disk. CASGO is released under the MIT
-license. Copyright (c) 2026 Xesco.
+license ([LICENSE](LICENSE)). Copyright (c) 2026 Xesco.

@@ -16,7 +16,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build CASGO.COM and casgo.dsk
-        run: make release
+        env:
+          TAG: ${{ github.ref_name }}
+        run: make release VERSION="${TAG#v}"
       - name: Create a draft release with the files
         env:
           GH_TOKEN: ${{ github.token }}
