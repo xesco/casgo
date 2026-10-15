@@ -18,9 +18,10 @@ CASGO needs the following.
 
 ## Loading a game
 
-Copy [CASGO.COM](CASGO.COM) to your disk, and type `CASGO` and the CAS file's name
-at the DOS prompt. CASGO answers on the next line with the loading method it picked
-for the tape:
+Download `CASGO.COM` from the newest release on the
+[Releases](https://github.com/xesco/casgo/releases) page, and copy it to your disk.
+Then type `CASGO` and the CAS file's name at the DOS prompt. CASGO answers on the
+next line with the loading method it picked for the tape:
 
 ```
 A>CASGO GAME.CAS
@@ -46,11 +47,11 @@ A>CASGO THUNDAB.CAS
 ## Trying CASGO in openMSX
 
 You can try CASGO in the openMSX emulator on the machine it is tested on, a Philips
-VG-8020 with a Carnivore2 cartridge. The folder [openmsx](openmsx) holds the setup:
-`casgo.dsk`, a disk image with Nextor and `CASGO.COM`
-([NEXTOR-LICENSE.md](NEXTOR-LICENSE.md)), and `casgo.tcl`, a script that starts it.
-openMSX needs two ROM files in its system ROMs folder, which this repository cannot
-hold:
+VG-8020 with a Carnivore2 cartridge. The folder [openmsx](openmsx) holds
+`casgo.tcl`, a script that starts it. Each release holds `casgo.dsk`, a disk image
+with Nextor and that release's `CASGO.COM` ([NEXTOR-LICENSE.md](NEXTOR-LICENSE.md)),
+for the script. openMSX needs two ROM files in its system ROMs folder, which this
+repository cannot hold:
 
 | ROM | Note |
 |---|---|
@@ -59,15 +60,16 @@ hold:
 
 Then follow these steps:
 
-1. Copy your CAS files into the folder `openmsx`. Give them names of up to 8
+1. Download `casgo.dsk` from the newest release into the folder `openmsx`.
+2. Copy your CAS files into the folder `openmsx`. Give them names of up to 8
    characters before `.CAS`, because a longer name is cut short on the disk.
-2. In the folder `openmsx`, start openMSX with the script:
+3. In the folder `openmsx`, start openMSX with the script:
 
    ```
    openmsx -machine Philips_VG_8020 -ext Carnivore2 -script casgo.tcl
    ```
 
-3. Wait for the `A>` prompt, and type `CASGO GAME.CAS`. `DIR` lists the files on the
+4. Wait for the `A>` prompt, and type `CASGO GAME.CAS`. `DIR` lists the files on the
    disk.
 
 The script copies `casgo.dsk` to `work.dsk` and adds the CAS files to the copy, so

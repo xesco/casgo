@@ -2,3 +2,6 @@
 openmsx/work.dsk
 openmsx/*.cas
 openmsx/*.CAS
+# Downloaded from a release
+CASGO.COM
+openmsx/casgo.dsk
