@@ -98,4 +98,4 @@ variants and the detector.
 | `src/tape.asm` | The tape routines of stage 3 |
 | `src/slots.asm`, `src/t0.asm`, `src/trampolines.asm`, `src/entries.asm` | The code CASGO puts in page 3 for the game: the slot wrappers, the routine that puts T0 in page 0, and the table of tape entries |
 | `src/iram.asm`, `src/t0iram.asm` | The memory cases that use a second RAM: the search for it, and T0 in it |
-| `tools/known.py`, `tools/known.tsv` | The known tapes, which the build turns into the detector's table and the variants' patches |
+| `tools/known.py`, `tools/known.tsv` | The tapes CASGO recognises by their blocks and treats specially, because its rules would pick the wrong cases or because they load only with a patch. The build turns them into the detector's table and the variants' patches |
