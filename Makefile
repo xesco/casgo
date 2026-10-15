@@ -1,11 +1,14 @@
 # CASGO: build CASGO.COM, the detector with the four variants after it.
 #
-#   make         build build/CASGO.COM
-#   make clean   remove build/ (keeps the downloads and the assembler)
+#   make           build build/CASGO.COM
+#   make release   also build build/casgo.dsk, a disk image with Nextor and
+#                  CASGO.COM for the openMSX setup in openmsx/
+#   make clean     remove build/ (keeps the downloads and the assembler)
 #
 # The build needs make, curl, a C++ compiler and Python 3. It downloads the
-# sjasmplus assembler's source, pinned by version and SHA-256, into dl/, and
-# builds the assembler into .tools/.
+# sjasmplus assembler's source, and for the disk image Nextor's NEXTOR.SYS and
+# COMMAND2.COM, each pinned by version and SHA-256, into dl/, and builds the
+# assembler into .tools/.
 
 SJASMPLUS_VERSION := 1.24.0
 
@@ -20,8 +23,9 @@ SJASMPLUS := $(TOOLS)/sjasmplus
 MEMORY_CASES := M R I T
 VARIANT_COMS := $(foreach m,$(MEMORY_CASES),$(BUILD)/CASGO$(m).COM)
 
-.PHONY: all clean
+.PHONY: all release clean
 all: $(BUILD)/CASGO.COM
+release: $(BUILD)/CASGO.COM $(BUILD)/casgo.dsk
 
 # The known tapes: the detector's table and the variants' patches, in one run.
 $(BUILD)/known.asm: tools/known.py tools/known.tsv
@@ -32,6 +36,9 @@ $(BUILD)/patches.asm: $(BUILD)/known.asm
 
 $(BUILD)/CASGO.COM: src/detect.asm src/patterns.asm $(BUILD)/known.asm $(VARIANT_COMS) $(SJASMPLUS)
 	$(SJASMPLUS) --nologo --msg=war -I$(BUILD) --raw=$@ --lst=$(BUILD)/detect.lst $<
+
+$(BUILD)/casgo.dsk: tools/mkdisk.py $(DL)/NEXTOR.SYS $(DL)/COMMAND2.COM $(BUILD)/CASGO.COM
+	python3 -I tools/mkdisk.py $@ $(DL)/NEXTOR.SYS $(DL)/COMMAND2.COM $(BUILD)/CASGO.COM
 
 variant_flags = -DCASE_C=1 -DCASE_N=1 -DCASE_S=1 -DCASE_B=1 \
                 -DMEM_R=$(if $(filter R,$(1)),1,0) -DMEM_I=$(if $(filter I,$(1)),1,0) \
@@ -55,6 +62,13 @@ endef
 
 $(DL)/sjasmplus-$(SJASMPLUS_VERSION)-src.tar.xz:
 	$(call fetch,https://github.com/z00m128/sjasmplus/releases/download/v$(SJASMPLUS_VERSION)/sjasmplus-$(SJASMPLUS_VERSION)-src.tar.xz,0b5013f07e8d8505f9e296529655668b6fdf0268625c19e883b0fff484e209f1)
+
+# Nextor 2.1.4 shipped only kernel ROMs; 2.1.3 is the latest NEXTOR.SYS.
+$(DL)/NEXTOR.SYS:
+	$(call fetch,https://github.com/Konamiman/Nextor/releases/download/v2.1.3/NEXTOR.SYS,3db8c8094bd5d3df4197b2f6606d4e28fb5a2462086f72ce8b6664d12a94bde7)
+
+$(DL)/COMMAND2.COM:
+	$(call fetch,https://raw.githubusercontent.com/Konamiman/Nextor/v2.1.4/source/command/command/command2.com,21f2e90251fdd8f0f726d67fc302d2aa57a1f157ceb31334a056530458845b85)
 
 $(SJASMPLUS): $(DL)/sjasmplus-$(SJASMPLUS_VERSION)-src.tar.xz
 	rm -rf $(TOOLS)/src

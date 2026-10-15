@@ -1,0 +1,28 @@
+# On a tag v*, builds CASGO.COM and casgo.dsk from source and creates a draft
+# release with both files, a pre-release for v0.x and for tags with a suffix
+# such as -beta. You write its notes and publish it on GitHub.
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build CASGO.COM and casgo.dsk
+        run: make release
+      - name: Create a draft release with the files
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          prerelease=
+          case "$TAG" in v0.*|*-*) prerelease=--prerelease ;; esac
+          gh release create "$TAG" build/CASGO.COM build/casgo.dsk \
+            --draft $prerelease --title "CASGO ${TAG#v}" --generate-notes
