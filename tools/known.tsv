@@ -1,124 +1,56 @@
-# The known tapes: tapes that the detector's rules give the wrong cases, and
-# tapes that load only with a patch. tools/known.py makes the detector's table
-# and the variants' patches from this file. Columns: file, cases (loader letters and a memory
-# letter), block, kind, values, patches, title. Blocks are counted from 0 at the
-# first header. A len entry matches when the blocks from BLOCK on have the
-# lengths in VALUES, 2 to 6 of them, comma-separated, in bytes after their
-# headers; a bytes entry matches when block BLOCK starts with the 8 bytes in
-# VALUES, in hexadecimal. PATCHES is - for none, or comma-separated changes
-# OFFSET=OLD>NEW in hexadecimal: the file's byte at OFFSET becomes NEW when every
-# OLD of the entry matches. NEW is S for T0's slot, or S^NN for T0's slot XOR
-# NN. A comment above each patched entry says why.
-# CASGO's own test tapes, which check the table and the patches.
-KNOWN.CAS	BM	0	len	16,784	-	CASGO's test tape
-KNOWNB.CAS	SM	1	bytes	00904d9100902a4a	-	CASGO's test tape
-PATCH.CAS	PM	0	len	16,562	44=4E>4F,45=4F>4B	CASGO's test tape
-#
-009-MINI.CAS	PI	4	len	24,391	-	009 - Mini Super Sprites
-017-MINI.CAS	PI	4	len	24,391	-	017-Mini Super Sprites
-032-ROBO.CAS	BT	39	len	16,378	-	032-Robot Wars
-087-PANE.CAS	BI	36	len	24,3530	-	087-Panel Panique
-A-TEAM.CAS	BR	10	len	16,10448	-	A-TEAM (1988)(Zafiro)
-ALIANTAN.CAS	BM	8	len	24,20823	-	Aliantantor dump di Andrea bendoni
-BUSTER.CAS	BM	10	len	16,21766	-	Buster Block (1985)(Kuma Computers)
-COMANDES.CAS	BM	1	len	256,16,7112,16,16776	-	Comando Tracer (1989)(Dinamic Software)(es)
-COMANDOA.CAS	BM	9	len	808,16	-	Comando Tracer (1989)(Dinamic Software)(es)
-DUSTIN.CAS	BM	6	len	16,21275	-	Dustin (1987)(Dinamic Software)(es)
-FOOTBAES.CAS	PI	8	len	16,20832	-	Football Manager - World Cup Edition (1990)(Addictive Games)(es)
-FOOTBCUP.CAS	PI	8	len	16,20679	-	Football Manager - World Cup Edition (1990)(Addictive)
-MANDRAGO.CAS	CM	1	len	32,840	-	Mandragore (Infogrames)(1987)(en)(Tape 1 Side A)
-OCEAN-CO.CAS	BR	9	len	16,16390	-	Ocean Conqueror (1987)(Mastertronic)
-ORMUZ.CAS	BR	12	len	19360,16	-	Ormuz (1988)(Iber Soft)(es)
-ORMUZA.CAS	BR	12	len	19360,16	-	Ormuz (1988)(Iber Soft)(es)
-PANEL-PA.CAS	BI	3	len	19624,456	-	Panel Panic (1986)(Eaglesoft)
-PANELA.CAS	BI	36	len	16,3530	-	Panel Panic (1986)(Eaglesoft)
-ROBOT-WA.CAS	BT	39	len	16,378	-	Robot Wars (1986)(Eaglesoft)
-ROBOTAL.CAS	BT	39	len	16,378	-	Robot Wars (ByteBusters) (Aackosoft - Eaglesoft) (Compulogical)
-SABRINA.CAS	PM	34	len	16,10375	-	Sabrina (1989)(Iber Soft)(es)
-SILICO84.CAS	BI	2	len	24584,17665	-	Silicon Dreams II - Return to Eden (1984)(Level 9 Computing)
-SPACE-SH.CAS	NI	4	len	16,40193	-	Space Shuttle - A Journey into Space (1986)(Activision)
-SPITFIRE.CAS	CBM	14	len	16,16903	-	Spitfire '40 (1986)(Mirrorsoft)
-SPY-VSA.CAS	CBM	7	len	1376,648	-	Spy vs Spy II - The Island Caper (1987)(Databyte)
-SUPER-SP.CAS	PI	4	len	16,391	-	Super Sprites (1986)(Idealogic)(es)
-SUPER19.CAS	BM	14	len	264,265	-	super msx 19 lato A
-SUPER6.CAS	ST	19	len	384,20886	-	super_msx_6_lato_A
-SUPERB.CAS	SM	36	len	17,19970	-	SUPER09B.CAS
-THE-GRO2.CAS	BT	11	bytes	4c3981000010df7c	-	The Growing Pains Of Adrian Mole, part 2
-THE-ICE.CAS	BM	7	len	16,28007	-	The Ice King (1986)(CDS Software)
-TRANSBAL.CAS	BT	0	len	19,256	-	transball-en
-TRANSRUN.CAS	BT	0	len	19,256	-	Transball (2016)(Santi Ontanon)
-TRIPLE.CAS	SM	10	len	11560,20008	-	Triple Comando (1988)(Dro Soft)(es)(Side A)
-TRITORN.CAS	PM	1	len	1016,16	-	Tritorn (1986)(Xain)
-# Mortadelo y Filemon: block 7 loads C9h over FC8Eh, where the stub case keeps
-# T0's slot, and block 5 writes the mapper port of page 2 with OUT (0FEh),A,
-# which a cassette machine ignores. FC8Eh's byte becomes T0's slot, the OUT two
-# NOPs, and each block's XOR check byte changes with them.
-MORTADEL.CAS	SI	3	len	704,12296	D5AE=C9>S,D910=D3>S^1A,3421=D3>00,3422=FE>00,6B0F=DC>F1	Mortadelo y Filemon (1988)(Dro Soft)(es)
-# Lady Safary: its slot code jumps to its copy in page 1, at 4042h, before it
-# makes the copy, when slot 1 or 2 has RAM there; the jumps go to the code at
-# 9042h that makes the copy.
-LADY-SAF.CAS	PR	5	len	16,10408	3310=40>90,3321=40>90	Lady Safary (1988)(OMK Software)(es)
-# Ship: its copy from 8500h to 8100h overwrites its own LDIR with bytes the file
-# never loads; the copy stops before its own code, at 5F41h bytes.
-SHIP.CAS	PR	0	len	16,23382	5B65=00>41,5B66=60>5F	Ship (1989)(Eurosoft)(es)
-# M-Droid: it calls FFE9h, above the hooks, which neither it nor the BIOS
-# writes; the call becomes three NOPs, as it returns on a cassette machine.
-M-DROID.CAS	PR	2	len	264,24,12296	72BE=CD>00,72BF=E9>00,72C0=FF>00	M-Droid (19xx)(Blue Ribbon Software)
-M-DROIDA.CAS	PR	3	len	16,12296,16,26630	729E=CD>00,729F=E9>00,72A0=FF>00	M-Droid (19xx)(Blue Ribbon Software)
-# Chuck Yeager's Advanced Flight Trainer: its loader copies 200h bytes of its
-# code to FACCh, over FC8Eh, where the stub case keeps T0's slot, from past the
-# end of its block; the copy stops at 1C2h bytes, before FC8Eh, which holds all
-# of the loader's code.
-CHUCK-YE.CAS	SI	3	len	384,16392	1CF=00>C2,1D0=02>01	Chuck Yeager's Advanced Flight Trainer (1989)(Dro Soft)
-# Gemini Wing, the dump with a loading screen: the same loader as Chuck Yeager's,
-# and the same change.
-GEMINIA.CAS	SI	2	len	16,12408	3267=00>C2,3268=02>01	Gemini Wing (1989)(Virgin Mastertronic)(Side A)
-# BMX Simulator: when page 3's slot is expanded, its loader sets only the
-# subslot register for pages 0 and 1, and copies its code into page 0, over T0;
-# its test of EXPTBL's byte becomes two NOPs, so that it puts page 3's slot in
-# pages 0 and 1, which the T case keeps away from T0.
-BMX-SIMU.CAS	BT	3	len	16,9224	26A0=20>00,26A1=10>00	BMX Simulator (1987)(Codemasters)
-# Bestial Warrior: its slot module, which runs from page 3, puts page 3 in the
-# slot of page 0 to set that slot's subslot register when the slot is expanded,
-# and takes its own code away. Page 0 holds T0 in the Carnivore2's expanded slot
-# 1, where a cassette machine holds the BIOS ROM in slot 0. The module's test of
-# EXPTBL's expanded bit becomes AND 00h, and the entry picks R, whose T0 is out of
-# the way of the game's search for RAM for page 0, from slot 3 down.
-BESTIAL.CAS	BR	3	len	16,9512	25F1=80>00	Bestial Warrior (1989)(Dinamic Software)(es)
-BESTIALA.CAS	BR	4	len	16,15704	1D1=80>00	Bestial Warrior (1989)(Dinamic Software)(es)
-# Spelunker (Engesoft's tape): each part takes the slots for its copy of the ROM
-# from the slot register, and expects F0h, the slots of BASIC on a cassette
-# machine with its RAM in slot 3; any other value sends the copy to slot 2.
-# Under CASGO page 0 holds T0, so the value differs; the test's JR Z becomes JR,
-# so that each part copies into slot 3, the internal RAM.
-ENGES06B.CAS	BI	0	len	24,267	4182=28>18,81F9=28>18	Engesoft MSXK-06 - Lado B
-# Super MSX 18: the code that starts TIDDLE's BASIC program, which it BLOADs over
-# the program area, writes the first line's link to 0801h instead of 8001h. A
-# cassette machine has ROM there; CASGO has T0, whose BIOS copy the write breaks.
-# The address becomes 8001h.
-SUPERM18.CAS	BI	10	len	16,16185	5BB1=08>80	SuperMSX18-LatoA
-# Rocky, the modified dump: the end of its blocks 9 and 11 puts slot 3 in every
-# page before it copies 467Fh bytes to 0300h, where the other dump copies them
-# into the ROM; in I the copy lands on T0. Those bytes become the other dump's.
-# The entry matches both dumps, and the old bytes only this one.
-ROCKYA.CAS	BI	3	len	184,16	6581=3E>00,6582=FF>00,6583=D3>00,6584=A8>00,6585=3E>00,6586=AA>00,6587=32>00,6588=FF>00,6589=FF>00,6595=3E>00,6596=F0>00,6597=D3>00,6598=A8>00,6599=FB>00,AC49=3E>00,AC4A=FF>00,AC4B=D3>00,AC4C=A8>00,AC4D=3E>00,AC4E=AA>00,AC4F=32>00,AC50=FF>00,AC51=FF>00,AC5D=3E>00,AC5E=F0>00,AC5F=D3>00,AC60=A8>00,AC61=FB>00	Rocky (1985)(Dinamic Software)(es)
-# Narco Police, the dump with another version of the stub loader: its stub takes
-# the slots for the tape calls as IN D,(C) / LD A,D / AND 0FCh / LD E,A, which
-# puts the BIOS ROM in page 0, and no rule finds it. AND 0FCh becomes OR with
-# T0's slot, as the stub case does for IN A,(0A8h) / LD H,A / AND 0FCh / LD L,A.
-NARCOA.CAS	BI	5	len	29648,49267	22E=E6>F6,22F=FC>S	Narco Police (1990)(Dinamic Software)(Side A)
-# Aackobase II: its block PROTSL searches the slots for RAM from 84h, slot 0-1, up,
-# and its probe of slot 1-1 leaves slot 1's subslot register selecting subslot 1
-# for page 0, which takes T0, in the mapper's subslot, out of page 0 in R. The
-# search starts at 87h, slot 3, which it takes for RAM on a cassette machine too.
-# The game then writes its RAM in every page of slot 3, so the entry picks R,
-# whose T0 is out of the way, and the plain case, whose loader the BASIC case's
-# changes break.
-AACKOBAA.CAS	PR	2	len	16,14608	3B36=0C>09	Aackobase II (1985)(Aackosoft)(nl)
-AACKOBAS.CAS	PR	2	len	24,14608	3B56=0C>09	Aackobase II (1985)(Aackosoft)(nl)
-# Gino e Pino, the first program of Super MSX 5: its loader searches the slots
-# for RAM from 80h up, finds the internal RAM first, puts it in page 0 and loads
-# 42 KB there, over T0 in I. The search starts at 88h, which skips subslots 0
-# and 1 and finds the mapper on a machine whose mapper is in subslot 2, as the
-# Carnivore2's is, or in a slot that is not expanded.
-SUPER-05.CAS	SI	4	len	16,416	3A4=80>88	SUPER05A
+file	cases	block	kind	values	patches	title	notes
+KNOWN.CAS	BM	0	len	16,784	-	CASGO's test tape	CASGO's own test tapes, which check the table and the patches.
+KNOWNB.CAS	SM	1	bytes	00904d9100902a4a	-	CASGO's test tape	CASGO's own test tapes, which check the table and the patches.
+PATCH.CAS	PM	0	len	16,562	44=4E>4F,45=4F>4B	CASGO's test tape	CASGO's own test tapes, which check the table and the patches.
+009-MINI.CAS	PI	4	len	24,391	-	009 - Mini Super Sprites	
+017-MINI.CAS	PI	4	len	24,391	-	017-Mini Super Sprites	
+032-ROBO.CAS	BT	39	len	16,378	-	032-Robot Wars	
+087-PANE.CAS	BI	36	len	24,3530	-	087-Panel Panique	
+A-TEAM.CAS	BR	10	len	16,10448	-	A-TEAM (1988)(Zafiro)	
+ALIANTAN.CAS	BM	8	len	24,20823	-	Aliantantor dump di Andrea bendoni	
+BUSTER.CAS	BM	10	len	16,21766	-	Buster Block (1985)(Kuma Computers)	
+COMANDES.CAS	BM	1	len	256,16,7112,16,16776	-	Comando Tracer (1989)(Dinamic Software)(es)	
+COMANDOA.CAS	BM	9	len	808,16	-	Comando Tracer (1989)(Dinamic Software)(es)	
+DUSTIN.CAS	BM	6	len	16,21275	-	Dustin (1987)(Dinamic Software)(es)	
+FOOTBAES.CAS	PI	8	len	16,20832	-	Football Manager - World Cup Edition (1990)(Addictive Games)(es)	
+FOOTBCUP.CAS	PI	8	len	16,20679	-	Football Manager - World Cup Edition (1990)(Addictive)	
+MANDRAGO.CAS	CM	1	len	32,840	-	Mandragore (Infogrames)(1987)(en)(Tape 1 Side A)	
+OCEAN-CO.CAS	BR	9	len	16,16390	-	Ocean Conqueror (1987)(Mastertronic)	
+ORMUZ.CAS	BR	12	len	19360,16	-	Ormuz (1988)(Iber Soft)(es)	
+ORMUZA.CAS	BR	12	len	19360,16	-	Ormuz (1988)(Iber Soft)(es)	
+PANEL-PA.CAS	BI	3	len	19624,456	-	Panel Panic (1986)(Eaglesoft)	
+PANELA.CAS	BI	36	len	16,3530	-	Panel Panic (1986)(Eaglesoft)	
+ROBOT-WA.CAS	BT	39	len	16,378	-	Robot Wars (1986)(Eaglesoft)	
+ROBOTAL.CAS	BT	39	len	16,378	-	Robot Wars (ByteBusters) (Aackosoft - Eaglesoft) (Compulogical)	
+SABRINA.CAS	PM	34	len	16,10375	-	Sabrina (1989)(Iber Soft)(es)	
+SILICO84.CAS	BI	2	len	24584,17665	-	Silicon Dreams II - Return to Eden (1984)(Level 9 Computing)	
+SPACE-SH.CAS	NI	4	len	16,40193	-	Space Shuttle - A Journey into Space (1986)(Activision)	
+SPITFIRE.CAS	CBM	14	len	16,16903	-	Spitfire '40 (1986)(Mirrorsoft)	
+SPY-VSA.CAS	CBM	7	len	1376,648	-	Spy vs Spy II - The Island Caper (1987)(Databyte)	
+SUPER-SP.CAS	PI	4	len	16,391	-	Super Sprites (1986)(Idealogic)(es)	
+SUPER19.CAS	BM	14	len	264,265	-	super msx 19 lato A	
+SUPER6.CAS	ST	19	len	384,20886	-	super_msx_6_lato_A	
+SUPERB.CAS	SM	36	len	17,19970	-	SUPER09B.CAS	
+THE-GRO2.CAS	BT	11	bytes	4c3981000010df7c	-	The Growing Pains Of Adrian Mole, part 2	
+THE-ICE.CAS	BM	7	len	16,28007	-	The Ice King (1986)(CDS Software)	
+TRANSBAL.CAS	BT	0	len	19,256	-	transball-en	
+TRANSRUN.CAS	BT	0	len	19,256	-	Transball (2016)(Santi Ontanon)	
+TRIPLE.CAS	SM	10	len	11560,20008	-	Triple Comando (1988)(Dro Soft)(es)(Side A)	
+TRITORN.CAS	PM	1	len	1016,16	-	Tritorn (1986)(Xain)	
+MORTADEL.CAS	SI	3	len	704,12296	D5AE=C9>S,D910=D3>S^1A,3421=D3>00,3422=FE>00,6B0F=DC>F1	Mortadelo y Filemon (1988)(Dro Soft)(es)	Mortadelo y Filemon: block 7 loads C9h over FC8Eh, where the stub case keeps T0's slot, and block 5 writes the mapper port of page 2 with OUT (0FEh),A, which a cassette machine ignores. FC8Eh's byte becomes T0's slot, the OUT two NOPs, and each block's XOR check byte changes with them.
+LADY-SAF.CAS	PR	5	len	16,10408	3310=40>90,3321=40>90	Lady Safary (1988)(OMK Software)(es)	Lady Safary: its slot code jumps to its copy in page 1, at 4042h, before it makes the copy, when slot 1 or 2 has RAM there; the jumps go to the code at 9042h that makes the copy.
+SHIP.CAS	PR	0	len	16,23382	5B65=00>41,5B66=60>5F	Ship (1989)(Eurosoft)(es)	Ship: its copy from 8500h to 8100h overwrites its own LDIR with bytes the file never loads; the copy stops before its own code, at 5F41h bytes.
+M-DROID.CAS	PR	2	len	264,24,12296	72BE=CD>00,72BF=E9>00,72C0=FF>00	M-Droid (19xx)(Blue Ribbon Software)	M-Droid: it calls FFE9h, above the hooks, which neither it nor the BIOS writes; the call becomes three NOPs, as it returns on a cassette machine.
+M-DROIDA.CAS	PR	3	len	16,12296,16,26630	729E=CD>00,729F=E9>00,72A0=FF>00	M-Droid (19xx)(Blue Ribbon Software)	M-Droid: it calls FFE9h, above the hooks, which neither it nor the BIOS writes; the call becomes three NOPs, as it returns on a cassette machine.
+CHUCK-YE.CAS	SI	3	len	384,16392	1CF=00>C2,1D0=02>01	Chuck Yeager's Advanced Flight Trainer (1989)(Dro Soft)	Chuck Yeager's Advanced Flight Trainer: its loader copies 200h bytes of its code to FACCh, over FC8Eh, where the stub case keeps T0's slot, from past the end of its block; the copy stops at 1C2h bytes, before FC8Eh, which holds all of the loader's code.
+GEMINIA.CAS	SI	2	len	16,12408	3267=00>C2,3268=02>01	Gemini Wing (1989)(Virgin Mastertronic)(Side A)	Gemini Wing, the dump with a loading screen: the same loader as Chuck Yeager's, and the same change.
+BMX-SIMU.CAS	BT	3	len	16,9224	26A0=20>00,26A1=10>00	BMX Simulator (1987)(Codemasters)	BMX Simulator: when page 3's slot is expanded, its loader sets only the subslot register for pages 0 and 1, and copies its code into page 0, over T0; its test of EXPTBL's byte becomes two NOPs, so that it puts page 3's slot in pages 0 and 1, which the T case keeps away from T0.
+BESTIAL.CAS	BR	3	len	16,9512	25F1=80>00	Bestial Warrior (1989)(Dinamic Software)(es)	Bestial Warrior: its slot module, which runs from page 3, puts page 3 in the slot of page 0 to set that slot's subslot register when the slot is expanded, and takes its own code away. Page 0 holds T0 in the Carnivore2's expanded slot 1, where a cassette machine holds the BIOS ROM in slot 0. The module's test of EXPTBL's expanded bit becomes AND 00h, and the entry picks R, whose T0 is out of the way of the game's search for RAM for page 0, from slot 3 down.
+BESTIALA.CAS	BR	4	len	16,15704	1D1=80>00	Bestial Warrior (1989)(Dinamic Software)(es)	Bestial Warrior: its slot module, which runs from page 3, puts page 3 in the slot of page 0 to set that slot's subslot register when the slot is expanded, and takes its own code away. Page 0 holds T0 in the Carnivore2's expanded slot 1, where a cassette machine holds the BIOS ROM in slot 0. The module's test of EXPTBL's expanded bit becomes AND 00h, and the entry picks R, whose T0 is out of the way of the game's search for RAM for page 0, from slot 3 down.
+ENGES06B.CAS	BI	0	len	24,267	4182=28>18,81F9=28>18	Engesoft MSXK-06 - Lado B	Spelunker (Engesoft's tape): each part takes the slots for its copy of the ROM from the slot register, and expects F0h, the slots of BASIC on a cassette machine with its RAM in slot 3; any other value sends the copy to slot 2. Under CASGO page 0 holds T0, so the value differs; the test's JR Z becomes JR, so that each part copies into slot 3, the internal RAM.
+SUPERM18.CAS	BI	10	len	16,16185	5BB1=08>80	SuperMSX18-LatoA	Super MSX 18: the code that starts TIDDLE's BASIC program, which it BLOADs over the program area, writes the first line's link to 0801h instead of 8001h. A cassette machine has ROM there; CASGO has T0, whose BIOS copy the write breaks. The address becomes 8001h.
+ROCKYA.CAS	BI	3	len	184,16	6581=3E>00,6582=FF>00,6583=D3>00,6584=A8>00,6585=3E>00,6586=AA>00,6587=32>00,6588=FF>00,6589=FF>00,6595=3E>00,6596=F0>00,6597=D3>00,6598=A8>00,6599=FB>00,AC49=3E>00,AC4A=FF>00,AC4B=D3>00,AC4C=A8>00,AC4D=3E>00,AC4E=AA>00,AC4F=32>00,AC50=FF>00,AC51=FF>00,AC5D=3E>00,AC5E=F0>00,AC5F=D3>00,AC60=A8>00,AC61=FB>00	Rocky (1985)(Dinamic Software)(es)	Rocky, the modified dump: the end of its blocks 9 and 11 puts slot 3 in every page before it copies 467Fh bytes to 0300h, where the other dump copies them into the ROM; in I the copy lands on T0. Those bytes become the other dump's. The entry matches both dumps, and the old bytes only this one.
+NARCOA.CAS	BI	5	len	29648,49267	22E=E6>F6,22F=FC>S	Narco Police (1990)(Dinamic Software)(Side A)	Narco Police, the dump with another version of the stub loader: its stub takes the slots for the tape calls as IN D,(C) / LD A,D / AND 0FCh / LD E,A, which puts the BIOS ROM in page 0, and no rule finds it. AND 0FCh becomes OR with T0's slot, as the stub case does for IN A,(0A8h) / LD H,A / AND 0FCh / LD L,A.
+AACKOBAA.CAS	PR	2	len	16,14608	3B36=0C>09	Aackobase II (1985)(Aackosoft)(nl)	Aackobase II: its block PROTSL searches the slots for RAM from 84h, slot 0-1, up, and its probe of slot 1-1 leaves slot 1's subslot register selecting subslot 1 for page 0, which takes T0, in the mapper's subslot, out of page 0 in R. The search starts at 87h, slot 3, which it takes for RAM on a cassette machine too. The game then writes its RAM in every page of slot 3, so the entry picks R, whose T0 is out of the way, and the plain case, whose loader the BASIC case's changes break.
+AACKOBAS.CAS	PR	2	len	24,14608	3B56=0C>09	Aackobase II (1985)(Aackosoft)(nl)	Aackobase II: its block PROTSL searches the slots for RAM from 84h, slot 0-1, up, and its probe of slot 1-1 leaves slot 1's subslot register selecting subslot 1 for page 0, which takes T0, in the mapper's subslot, out of page 0 in R. The search starts at 87h, slot 3, which it takes for RAM on a cassette machine too. The game then writes its RAM in every page of slot 3, so the entry picks R, whose T0 is out of the way, and the plain case, whose loader the BASIC case's changes break.
+SUPER-05.CAS	SI	4	len	16,416	3A4=80>88	SUPER05A	Gino e Pino, the first program of Super MSX 5: its loader searches the slots for RAM from 80h up, finds the internal RAM first, puts it in page 0 and loads 42 KB there, over T0 in I. The search starts at 88h, which skips subslots 0 and 1 and finds the mapper on a machine whose mapper is in subslot 2, as the Carnivore2's is, or in a slot that is not expanded.
