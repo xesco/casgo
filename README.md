@@ -3,8 +3,12 @@
 CASGO loads a cassette game on a real MSX from a CAS file, which is the usual image
 of an MSX tape, on any drive that DOS can read. You start CASGO at the Nextor or
 MSX-DOS 2 prompt with the CAS file's name, and the game then loads as it would from
-tape, but in seconds. This page tells MSX owners how to run it, and
-[LIMITS.md](LIMITS.md) lists the kinds of tape that do not load and why.
+tape, but in seconds. This page tells MSX owners how to run it, and two more pages
+cover the rest:
+
+- [LIMITS.md](LIMITS.md) lists the kinds of tape that do not load, and why.
+- [DESIGN.md](DESIGN.md) explains how CASGO works, for anyone who reads or changes
+  its source.
 
 ## Requirements
 
@@ -28,10 +32,10 @@ A>CASGO GAME.CAS
 GAME.CAS: CASGOR /CB
 ```
 
-CASGO then switches to BASIC and types the load command itself. CASGO reads the whole
-CAS file into RAM before the game starts, so the game reads its tape from RAM and never
-calls DOS, which would disturb the game's timing and state and could stop the game with
-a disk error.
+CASGO then switches to BASIC and types the load command itself. CASGO reads the
+whole CAS file into RAM before the game starts, so the game reads its tape from RAM
+and never calls DOS, which would disturb the game's timing and state and could stop
+the game with a disk error.
 
 ## Games on two sides
 
@@ -80,14 +84,14 @@ the menu's first entry.
 
 CASGO is written in Z80 assembly, in the folder [src](src). `make` builds
 `build/CASGO.COM`. It downloads the source of the sjasmplus assembler, pinned by
-version and checksum, builds the assembler, and then assembles CASGO. The build needs
-make, curl, a C++ compiler and Python 3. [tools/known.tsv](tools/known.tsv) lists
-the tapes that CASGO recognises by their blocks, with the loading method each needs
-and the bytes it patches in some of them.
+version and checksum, builds the assembler, and then assembles CASGO. The build
+needs make, curl, a C++ compiler and Python 3. [tools/known.tsv](tools/known.tsv)
+lists the tapes that CASGO recognises by their blocks, with the loading method each
+needs and the bytes it patches in some of them.
 
 ## Author and license
 
-I wrote CASGO with Claude, Anthropic's AI, to load more cassette games than any other
-CAS loader I know of. The loader I used before is the one that comes with SofaRun, an
-MSX program that starts games from disk. CASGO is released under the MIT license.
-Copyright (c) 2026 Xesco.
+I wrote CASGO with Claude, Anthropic's AI, to load more cassette games than any
+other CAS loader I know of. The loader I used before is the one that comes with
+SofaRun, an MSX program that starts games from disk. CASGO is released under the MIT
+license. Copyright (c) 2026 Xesco.
