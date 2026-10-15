@@ -24,11 +24,12 @@ CASGO needs the following.
 
 Download `CASGO.COM` from the newest release on the
 [Releases](https://github.com/xesco/casgo/releases) page, and copy it to your disk.
-Then type `CASGO` and the CAS file's name at the DOS prompt. CASGO answers on the
-next line with the loading method it picked for the tape:
+Then type `CASGO` and the CAS file's name at the DOS prompt. CASGO answers with its
+version, then the loading method it picked for the tape:
 
 ```
 A>CASGO GAME.CAS
+CASGO 0.1.2
 GAME.CAS: CASGOR /CB
 ```
 
@@ -45,6 +46,7 @@ loader letters, a memory letter, or both. CASGO picks what the option leaves out
 
 ```
 A>CASGO /M GAME.CAS
+CASGO 0.1.2
 GAME.CAS: CASGOM /CB
 ```
 

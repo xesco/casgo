@@ -31,6 +31,8 @@ LOADER_ROOM equ 256     ; the loader goes this far below the end of the TPA
         org 0100h       ; a .COM is loaded and started at 0100h (DOS2-PIS 2.1)
 
 start:
+        ld de,banner    ; CASGO's name and version, on every run
+        call print_dos
         call take_path
 
         ; The internal RAM search switches pages 0 and 3, so it runs from page
@@ -1398,10 +1400,12 @@ print_dos:
 
         include "patterns.asm"
 
-usage:
+banner:
         db "CASGO "
         include "version.asm"   ; the version, which the Makefile writes
-        db 13,10,"Usage: CASGO [/CASES] FILE.CAS",13,10,"$"
+        db 13,10,"$"
+usage:
+        db "Usage: CASGO [/CASES] FILE.CAS",13,10,"$"
 unknown_option:
         db "Unknown option: $"
 bload_text:
