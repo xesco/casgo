@@ -13,9 +13,10 @@ from 0 at the first header. A len row matches when the blocks from BLOCK on have
 the lengths in VALUES, 2 to 6 of them, comma-separated, in bytes after their
 headers; a bytes row matches when block BLOCK starts with the 8 bytes in VALUES,
 in hexadecimal. PATCHES is - for none, or comma-separated changes OFFSET=OLD>NEW
-in hexadecimal: the file's byte at OFFSET becomes NEW when every OLD of the row
-matches. NEW is S for T0's slot, or S^NN for T0's slot XOR NN. The notes say why
-a tape needs its patch.
+in hexadecimal: the file's bytes from OFFSET on, OLD, become NEW when every OLD of
+the row matches. NEW has as many bytes as OLD, or one byte that each of them
+becomes. NEW is S for T0's slot, or S^NN for T0's slot XOR NN, with one byte of
+OLD. The notes say why a tape needs its patch.
 
 Each entry of the detector's table starts with its kind, 0 for block lengths and
 1 for a block's first bytes, then the first block's number and the count of
@@ -34,7 +35,7 @@ import sys
 
 
 def patches(path, f, text):
-    """The (offset, old, new, flag) of each patch in a patches column, or ()."""
+    """The (offset, old, new, flag) of each byte a patches column changes, or ()."""
     if text == "-":
         return ()
     out = []
@@ -42,16 +43,20 @@ def patches(path, f, text):
         try:
             where, change = p.split("=")
             old, new = change.split(">")
+            where = int(where, 16)
+            old = bytes.fromhex(old)
             flag = 0
             if new.startswith("S"):
                 flag = 1
                 new = new[2:] if new.startswith("S^") else "00"
-            out.append((int(where, 16), int(old, 16), int(new, 16), flag))
+            new = bytes.fromhex(new)
         except ValueError:
             sys.exit(f"error: {path}: {f}: bad patch {p}")
-        where, old, new, _ = out[-1]
-        if not (0 <= where < 1 << 24 and 0 <= old < 256 and 0 <= new < 256):
+        if len(new) == 1:
+            new = new * len(old)
+        if not old or len(new) != len(old) or not 0 <= where < (1 << 24) - len(old):
             sys.exit(f"error: {path}: {f}: bad patch {p}")
+        out += [(where + i, old[i], new[i], flag) for i in range(len(old))]
     return tuple(out)
 
 
