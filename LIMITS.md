@@ -3,8 +3,7 @@
 CASGO loads a tape by giving the game's loader the tape's bytes from RAM, in place
 of the cassette routines of the MSX's BIOS. A tape fails when its loader or its game
 reaches the tape, or the memory, in a way that CASGO does not cover. This page lists
-those kinds of tape, for anyone whose game does not load, and
-[KNOWN-ISSUES.md](KNOWN-ISSUES.md) names the tested games that fail.
+those kinds of tape, for anyone whose game does not load.
 
 ## Tapes that do not load
 
@@ -27,3 +26,7 @@ those kinds of tape, for anyone whose game does not load, and
 - Choose which file on the tape to start. CASGO starts at the beginning, as a
   rewound tape does.
 - Return to DOS. The game ends with a reset, as on a cassette machine.
+
+If you have a CAS file that does not load, open an issue on
+[GitHub](https://github.com/xesco/casgo/issues) with the game's name, and I will add
+support for it.

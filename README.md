@@ -4,7 +4,7 @@ CASGO loads a cassette game on a real MSX from a CAS file, which is the usual im
 of an MSX tape, on any drive that DOS can read. You start CASGO at the Nextor or
 MSX-DOS 2 prompt with the CAS file's name, and the game then loads as it would from
 tape, but in seconds. This page tells MSX owners how to run it, and
-[KNOWN-ISSUES.md](KNOWN-ISSUES.md) lists the games that do not load and why.
+[LIMITS.md](LIMITS.md) lists the kinds of tape that do not load and why.
 
 ## Requirements
 
