@@ -8,8 +8,7 @@ Usage:
 known.tsv lists the tapes that the detector's rules give the wrong cases, and
 the tapes that load only with a patch, one per row after a header row. Its
 columns: title, cases (loader letters and a memory letter), block, kind, values,
-patches and notes; the title and notes are for people. A cell that spans lines,
-as a long note does, is in double quotes. Blocks are counted
+patches and notes; the title and notes are for people. Blocks are counted
 from 0 at the first header. A len row matches when the blocks from BLOCK on have
 the lengths in VALUES, 2 to 6 of them, comma-separated, in bytes after their
 headers; a bytes row matches when block BLOCK starts with the 8 bytes in VALUES,
