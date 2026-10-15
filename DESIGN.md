@@ -41,8 +41,7 @@ CASGO works in three stages, one after the other.
    from the data segments. TAPIN runs in T0, in page 0, and reads a byte by putting
    its data segment in page 0, because pages 1 to 3 belong to the game. The CPU then
    runs its next instructions from the data segment, so every data segment holds two
-   instructions at that address: one reads the byte, the next puts T0 back in page
-   0.
+   instructions at that address: one reads the byte, the next puts T0 back.
 
 ## The detector and the variants
 
