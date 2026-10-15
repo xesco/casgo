@@ -38,6 +38,9 @@ whole CAS file into RAM before the game starts, so the game reads its tape from 
 and never calls DOS, which would disturb the game's timing and state and could stop
 the game with a disk error.
 
+CAS files that CasLink3 made from cartridge ROM images load too: CASGO starts the
+cartridge image itself, instead of the reset that such a tape ends with.
+
 ## Forcing the loading method
 
 CASGO picks the loading method from the CAS file. When a game does not load with

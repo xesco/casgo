@@ -14,7 +14,6 @@ kinds of tape, for anyone whose game does not load.
 | On an MSX2 whose only RAM is its own mapper, such as a Philips NMS 8245 or 8250 with no RAM cartridge: the game copies its code into the first 16 KB of RAM, where CASGO keeps its copy of the BIOS. With a second RAM slot, from a memory cartridge, a Carnivore2 or a MegaFlashROM SD, CASGO puts its copy there instead, and these games load | The load stops partway |
 | The game's slot code is wrong on machines whose slot 0 is expanded, such as the Panasonic FS-A1WX and FS-A1WSX, the Sony HB-F1XV (MSX2+) and the Sony HB-F700P (MSX2) | The game hangs, as it does when it loads from a real tape on such a machine |
 | The game uses a cartridge slot by its number and expects RAM there | The load fails. Put your disk interface in the other slot |
-| The game puts a cartridge image in RAM and resets the machine to start it | The machine boots DOS again, or stays on the MSX logo, because the disk interface starts first |
 | The CAS file is larger than the free mapper RAM | CASGO stops before the load and says how many 16 KB blocks the file needs and how many are free |
 
 ## What CASGO does not do
