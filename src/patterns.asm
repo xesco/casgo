@@ -1,15 +1,15 @@
-; The byte patterns that the detector's rules and the variants' patches look
-; for (docs/CASES.md, Loader cases). Included by src/casgo.asm and
-; src/detect.asm, so that a rule and its patch find the same bytes. Each is 8
-; bytes long, and the scans compare the 7 bytes before the last one.
+; The byte patterns that the detector's rules and the variants' patches look for.
+; casgo.asm and detect.asm both include this file, so that a rule and its patch
+; find the same bytes. Each is 8 bytes long, and the scans compare the 7 bytes
+; before the last one.
 
 ; A CAS block header.
 cas_header:
         db 1Fh, 0A6h, 0DEh, 0BAh, 0CCh, 13h, 7Dh, 74h
 
-; CasLink3's start of the ROM image that its parts put in RAM, LDIR / POP AF /
-; AND 0FCh / OUT (0A8h),A / RST 30h: a call of the reset, 0000h in slot 0, whose
-; three bytes follow (docs/CASES.md, ROM images started by a reset).
+; CasLink3's start of the ROM image it puts in RAM, LDIR / POP AF / AND 0FCh /
+; OUT (0A8h),A / RST 30h: an inter-slot call of the reset, 0000h in slot 0, whose
+; three bytes follow.
 caslink_reset:
         db 0EDh, 0B0h, 0F1h, 0E6h, 0FCh, 0D3h, 0A8h, 0F7h
 

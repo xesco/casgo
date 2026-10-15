@@ -1,12 +1,9 @@
-; Stage 3: CASGO's tape routines (docs/DESIGN.md, stage 3).
-;
-; Assembled for TAPE_BASE in the BIOS copy, T0, and copied there by stage 2,
-; over the BIOS's own tape code. The game reaches them through the BIOS jump
-; table, which stage 2 points here. Stage 1 has read the CAS file into the data
-; segments, 16381 bytes in each, and filled in the state at the end of this
-; file. TAPIN reads a byte by putting its data segment in page 0 for two
-; instructions, the swap; every data segment holds those two instructions at
-; HOLE, the same address as here.
+; Stage 3: CASGO's tape routines, assembled for TAPE_BASE in T0, over the BIOS's
+; own tape code. The game reaches them through the BIOS jump table. Stage 1 has
+; read the CAS file into the data segments, 16381 bytes in each, and filled in
+; the state at the end of this file. TAPIN reads a byte by putting its data
+; segment in page 0 for two instructions, the swap, which every data segment
+; holds at HOLE, the same address as here.
 
 ; TAPION: finds the next header in the CAS file. Returns carry clear when one
 ; is found, or carry set at the end of the file. Leaves interrupts off, as the
@@ -44,11 +41,10 @@ tapion:
 ; at the end of the file. Like the BIOS's TAPIN, which builds the byte in D, it
 ; leaves the byte in D too: a loader can compare its checksum with D, as
 ; Hydlide's does. Changes AF, BC and DE and keeps HL; leaves interrupts off, as
-; the BIOS's TAPIN does (Red Book 1ABCh). It uses no stack, so it works
-; wherever the game's stack is. In the BASIC variants, tp_left counts the bytes
-; up to the next change between bytes to deliver and bytes to drop, and TAPIN
-; reads the dropped bytes and goes on to the next (docs/CASES.md, BASIC's own
-; loads).
+; the BIOS's TAPIN does (Red Book 1ABCh). It uses no stack, so it works wherever
+; the game's stack is. With the BASIC case, tp_left counts the bytes up to the
+; next switch between bytes to deliver and bytes to drop, and TAPIN skips the
+; dropped ones.
 tapin:
         di
 .again:
@@ -74,11 +70,10 @@ tapin:
 .counted:
         ld de,(tp_ptr)
         ld a,(tp_seg)
-        ; The swap's set-up, 11 bytes. With T0 in the mapper, as here, the
-        ; swap writes the mapper port of page 0. In the I and T variants, T0 is in
-        ; the internal RAM, and stage 2 writes slot_swap over these bytes, so
-        ; that the swap writes the slot register instead (docs/CASES.md, T0
-        ; in the internal RAM).
+        ; The swap's set-up, 11 bytes. With T0 in the mapper, as here, the swap
+        ; writes the mapper port of page 0. In I and T, stage 2 writes slot_swap
+        ; (t0iram.asm) over these bytes, so that the swap writes the slot
+        ; register instead.
 .set_up:
 .t0:    ld bc,0FCh      ; C = page 0's mapper port; B = T0, written by stage 2
         ds 8            ; NOPs
@@ -162,7 +157,7 @@ stmotr:
 
         IF T0_IRAM
 ; The rest of the swap's set-up in the I and T variants when the mapper's slot is
-; expanded (src/t0iram.asm, slot_swap_x), with B the slots as they were and A
+; expanded (t0iram.asm, slot_swap_x), with B the slots as they were and A
 ; the same without page 3: page 3 goes to the mapper's slot, whose subslot
 ; register then selects the mapper's subslot in page 0, and A and C are set as
 ; slot_swap sets them. The swap's first OUT puts page 3 back. It runs from T0 and
@@ -181,13 +176,12 @@ swap_sub:
         ld c,PSLOT
         jp tapin.swap
 
-; The tape entries of T0's spare copy, in the mapper's page 0 (docs/CASES.md, T0
-; in the internal RAM). A loader that has the mapper in page 0 at a tape call
-; reaches the copy, whose tape state stays as stage 2 left it, so these entries
-; put T0 in page 0 for the call and the copy back after it. Each OUT runs in one
-; copy and the next instruction in the other, which holds the same bytes here.
-; They keep the routine's A, flags and HL, and use 4 bytes of stack more than a
-; direct call.
+; The tape entries of T0's spare copy, in the mapper's page 0. A loader that has
+; the mapper in page 0 at a tape call reaches the copy, whose tape state never
+; moves, so these entries put T0 in page 0 for the call and the copy back after
+; it. Each OUT runs in one copy and the next instruction in the other, which
+; holds the same bytes. They keep the routine's A, flags and HL, and use 4 bytes
+; of stack more than a direct call.
 spare_tapion:
         in a,(PSLOT)
         push af         ; the slot register as it was
@@ -215,9 +209,9 @@ spare_back:
 
         IF CASE_B
 ; The second call of a loader that restores page 0, then page 1, with its own
-; copy of ENASLT and A left over from the first call (docs/CASES.md, BASIC's
-; own loads): A becomes the main ROM's slot, which a cassette machine has in
-; page 1, and the loader's routine follows. Stage 1 writes its address.
+; copy of ENASLT and A left over from the first call: A becomes the main ROM's
+; slot, which a cassette machine has in page 1, and the loader's routine follows.
+; Stage 1 writes its address.
 slot1_fix:
         ld a,(EXPTBL)
         jp 0

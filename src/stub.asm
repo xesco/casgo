@@ -1,10 +1,10 @@
-; The stub case (docs/CASES.md, Stub loaders): one loader calls the tape
-; through a stub that it builds in page 3, with the slots for the call computed
-; as the slot register AND FCh, which puts the ROM in page 0. Stage 1 changes
-; two bytes of the loader's code, so that the stub puts T0 in page 0.
+; The stub case: a loader, used by many Erbe, Dro and Topo tapes, that calls the
+; tape through a stub it builds in page 3, with the slot register AND FCh, which
+; puts the ROM in page 0. Stage 1 changes two bytes of the loader, so that the
+; stub puts T0 in page 0 instead.
 
-; At the D5h or E5h byte at HL: notes the build sequence that ends there, the
-; one of TAPION or of TAPOON, or the one with HL. Changes AF, BC and DE.
+; At the D5h or E5h byte at HL: notes a stub build sequence ending there.
+; Changes AF, BC and DE.
 stub_check:
         ld de,stub_build
         call scan_compare
@@ -21,10 +21,10 @@ stub_check:
         ld a,NOTE_BUILD
         jp pl_note
 
-; At a build note: when IN A,(0A8h) / LD H,A / AND 0FCh / LD L,A follows the
-; build sequence within 40 bytes, AND 0FCh becomes OR with T0's slot. Else,
-; when the build code around it is the 35 bytes of the loader's family, LD A,H
-; becomes LD A,(HL), which reads T0's slot at FC8Eh, and AND H becomes OR H.
+; At a build note: when IN A,(0A8h) / LD H,A / AND 0FCh / LD L,A follows within
+; 40 bytes, AND 0FCh becomes OR T0's slot. Otherwise, when the build code is the
+; loader family's 35 bytes, LD A,H becomes LD A,(HL), which reads T0's slot at
+; FC8Eh, and AND H becomes OR H.
 stub_patch:
         ld c,8          ; C = the place to look at, after the build sequence
 .find:
