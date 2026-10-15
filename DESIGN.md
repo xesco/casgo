@@ -2,8 +2,7 @@
 
 This page explains how CASGO loads a tape, for anyone who wants to read or change
 its source. It gives the idea of each part and names the source file that holds it;
-the comments in the source give the details. [README.md](README.md) says how to use
-CASGO, and [LIMITS.md](LIMITS.md) lists the tapes it cannot load.
+the comments in the source give the details.
 
 ## The idea
 
@@ -84,7 +83,7 @@ case.
 ## The source
 
 The source is Z80 assembly, assembled with sjasmplus. `make` builds the four
-variants and the detector ([Building](README.md#building)).
+variants and the detector.
 
 | File | What it holds |
 |---|---|

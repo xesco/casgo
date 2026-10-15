@@ -21,8 +21,8 @@ those kinds of tape, for anyone whose game does not load.
 ## What CASGO does not do
 
 - Save to tape.
-- Load two CAS files in one run. Join them into one file first
-  ([Games on two sides](README.md#games-on-two-sides)).
+- Load two CAS files in one run. Join them into one file first, with MSX-DOS 2's
+  `CONCAT /B`.
 - Choose which file on the tape to start. CASGO starts at the beginning, as a
   rewound tape does.
 - Return to DOS. The game ends with a reset, as on a cassette machine.
