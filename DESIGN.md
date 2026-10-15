@@ -29,9 +29,11 @@ KB segment of RAM.
 
 CASGO works in three stages, one after the other.
 
-1. **In DOS.** CASGO checks that the BIOS is one it knows, opens the CAS file, and
-   reads the whole file into free mapper segments. It changes a few bytes of the
-   loaders that need it ([Loader cases](#loader-cases)), then starts BASIC.
+1. **In DOS.** CASGO checks that the BIOS's tape routines are at the standard
+   addresses, because it later writes its own over them; on any other BIOS it stops
+   with "Unknown BIOS". It then reads the whole CAS file into free mapper segments,
+   changes a few bytes of the loaders that need it ([Loader cases](#loader-cases)),
+   and starts BASIC.
 2. **In BASIC.** CASGO cleans P3 of the disk system, copies the BIOS into T0 with
    its own tape routines, and puts T0 in page 0. It then types the load command that
    the tape's first file needs, such as `BLOAD"CAS:",R`.
