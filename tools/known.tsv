@@ -1,7 +1,6 @@
-# The known tapes (docs/CASES.md, Known tapes): tapes that no rule gives the
-# cases that load them, and tapes that load only with a patch. tools/known.py
-# makes the detector's table and the variants' patches from this file, and
-# tools/cases.py reads it too. Columns: file, cases (loader letters and a memory
+# The known tapes: tapes that the detector's rules give the wrong cases, and
+# tapes that load only with a patch. tools/known.py makes the detector's table
+# and the variants' patches from this file. Columns: file, cases (loader letters and a memory
 # letter), block, kind, values, patches, title. Blocks are counted from 0 at the
 # first header. A len entry matches when the blocks from BLOCK on have the
 # lengths in VALUES, 2 to 6 of them, comma-separated, in bytes after their
@@ -10,10 +9,10 @@
 # OFFSET=OLD>NEW in hexadecimal: the file's byte at OFFSET becomes NEW when every
 # OLD of the entry matches. NEW is S for T0's slot, or S^NN for T0's slot XOR
 # NN. A comment above each patched entry says why.
-# The test tapes of test/boot.tcl.
-KNOWN.CAS	BM	0	len	16,784	-	CASGO's test tape (test/boot.tcl, dknown)
-KNOWNB.CAS	SM	1	bytes	00904d9100902a4a	-	CASGO's test tape (test/boot.tcl, dknownb)
-PATCH.CAS	PM	0	len	16,562	44=4E>4F,45=4F>4B	CASGO's test tape (test/boot.tcl, dpatch)
+# CASGO's own test tapes, which check the table and the patches.
+KNOWN.CAS	BM	0	len	16,784	-	CASGO's test tape
+KNOWNB.CAS	SM	1	bytes	00904d9100902a4a	-	CASGO's test tape
+PATCH.CAS	PM	0	len	16,562	44=4E>4F,45=4F>4B	CASGO's test tape
 #
 009-MINI.CAS	PI	4	len	24,391	-	009 - Mini Super Sprites
 017-MINI.CAS	PI	4	len	24,391	-	017-Mini Super Sprites
