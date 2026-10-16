@@ -85,11 +85,9 @@ def verdict(path):
     return text.split(" ")[0] or None
 
 
-def title(full):
-    """The game's title from a corpus file name, without the load hints."""
-    t = re.sub(r"\.cas$", "", full, flags=re.I)
-    t = re.sub(r"\s*\[[^\]]*\]", "", t)
-    return t.replace("|", "/").strip()
+def game(full):
+    """The tape's file name on File-Hunter, escaped for a Markdown table cell."""
+    return re.sub(r"([\\|*_])", r"\\\1", full.strip())
 
 
 def read_tsv(path, value=1):
@@ -223,7 +221,7 @@ def main():
             else:
                 instead = ""
                 counts["none"] += 1
-        rows.append((title(names.get(f, f)), f, loads, shown(pick, patched.get(f, 0)), code,
+        rows.append((game(names.get(f, f)), loads, shown(pick, patched.get(f, 0)), code,
                      "CASGO /" + instead[5:] if instead else ""))
     rows.sort(key=lambda r: r[0].lower())
 
@@ -280,11 +278,11 @@ def main():
         if counts["code ?"]:
             o.write(f"| ? | The run did not finish | {counts['code ?']} |\n")
         o.write("\n## Games\n\n")
-        o.write("The table lists the tapes by title.\n\n")
-        o.write("| Game | File | Loads | Variant | Code | Run instead |\n|---|---|---|---|---|---|\n")
-        for t, f, loads, variant, code, instead in rows:
+        o.write("The table lists the tapes by their file name on File-Hunter.\n\n")
+        o.write("| Game | Loads | Variant | Code | Run instead |\n|---|---|---|---|---|\n")
+        for t, loads, variant, code, instead in rows:
             i = f"`{instead}`" if instead else ""
-            o.write(f"| {t} | {f} | {loads} | `{variant}` | {code} | {i} |\n")
+            o.write(f"| {t} | {loads} | `{variant}` | {code} | {i} |\n")
 
 
 if __name__ == "__main__":
