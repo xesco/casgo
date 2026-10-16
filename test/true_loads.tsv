@@ -1,0 +1,7 @@
+# Tapes that investigation found loading with CASGO although the screen at the
+# end of the load differs from the cassette player's by chance, or because one
+# run drew more of the same screen. tools/games_table.py counts them as loads. Columns: file,
+# evidence.
+FLOWER.CAS	deals its cards at random: CASGO's screen and the cassette player's show the same card table with other cards, 74% of the pixels the same
+009-MINI.CAS	draws its menu slowly: CASGO's screen shows the whole menu and the cassette player's only its first boxes, 86% of the pixels the same; the menu waits for the cursor keys, so the test's keys do not change it
+017-MINI.CAS	draws its menu slowly: CASGO's screen shows the whole menu and the cassette player's only its first boxes, 88% of the pixels the same; the menu waits for the cursor keys, so the test's keys do not change it

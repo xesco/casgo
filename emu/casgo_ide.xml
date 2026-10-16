@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+<!DOCTYPE msxconfig SYSTEM 'msxconfig2.dtd'>
+<!-- openMSX's Sunrise IDE extension (share/extensions/ide.xml) with the
+     Nextor 2.1.4 kernel in place of the Sunrise ROM. The Makefile installs it
+     as the extension casgo_ide, with the ROM beside it, and the test puts the
+     disk image in with the hda command. -->
+<msxconfig>
+  <info>
+    <name>Sunrise ATA-IDE with Nextor 2.1.4</name>
+    <manufacturer>Sunrise</manufacturer>
+    <code/>
+    <release_year/>
+    <description>Sunrise IDE interface running the Nextor kernel, for the CASGO tests.</description>
+    <type>external hard disk</type>
+  </info>
+  <devices>
+    <primary slot="any">
+      <secondary slot="any">
+        <SunriseIDE id="Sunrise IDE">
+          <mem base="0x0000" size="0x10000"/>
+          <rom>
+            <filename>Nextor-2.1.4.SunriseIDE.ROM</filename>
+          </rom>
+          <master>
+            <type>IDEHD</type>
+            <filename>hd.dsk</filename>
+            <size>1</size>
+            <name>CASGO test disk</name>
+          </master>
+        </SunriseIDE>
+      </secondary>
+    </primary>
+  </devices>
+</msxconfig>

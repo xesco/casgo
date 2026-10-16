@@ -1,0 +1,41 @@
+<?xml version="1.0" ?>
+<!DOCTYPE msxconfig SYSTEM 'msxconfig2.dtd'>
+<!-- openMSX's MegaFlashROM SCC+ SD extension (share/extensions/
+     MegaFlashROM_SCC+_SD.xml) with the Nextor 2.1.4 kernel in its flash. The
+     cartridge's SD subslot runs Nextor from flash offset 700000h. The Makefile
+     writes flash.rom, which holds erased flash (FFh bytes) up to that offset
+     and then the kernel, and installs the extension as casgo_mfrsd. openMSX
+     names the first SD card hda, so the tests insert the disk image with the
+     same command as for the Sunrise IDE. The cartridge also brings its own
+     memory mapper. -->
+<msxconfig>
+  <info>
+    <name>MegaFlashROM SCC+ SD with Nextor 2.1.4</name>
+    <manufacturer>Manuel Pazos</manufacturer>
+    <code/>
+    <release_year/>
+    <description>MegaFlashROM SCC+ SD running the Nextor kernel, for the CASGO tests.</description>
+    <type>Flash cartridge</type>
+  </info>
+  <devices>
+    <primary slot="any">
+      <secondary slot="any">
+        <MegaFlashRomSCCPlusSD id="MegaFlashRom SCC+ SD">
+          <mem base="0x0000" size="0x10000"/>
+          <sound>
+            <volume>9000</volume>
+          </sound>
+          <rom>
+            <filename>flash.rom</filename>
+          </rom>
+          <sdcard1>
+            <filename>sd.dsk</filename>
+            <size>1</size>
+          </sdcard1>
+          <sramname>casgo_mfrsd.sram</sramname>
+          <hasmemorymapper>true</hasmemorymapper>
+        </MegaFlashRomSCCPlusSD>
+      </secondary>
+    </primary>
+  </devices>
+</msxconfig>

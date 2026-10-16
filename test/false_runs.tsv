@@ -1,0 +1,10 @@
+# Runs of a variant by its name that ended in RUNS, which counts as a load, but
+# that investigation found to be no load.
+# tools/games_table.py does not offer them to run instead. Columns: file,
+# program, evidence.
+DAM-BUST.CAS	CASGONR	resets the machine; its screen is Nextor's boot text
+SUPER6.CAS	CASGOSM	stops after 3709 of 51584 tape calls, the same as CASGOSI
+BUMPY.CAS	CASGOCBI	stays on its loading screen for 60 seconds
+GRAVITIC.CAS	CASGOBI	ends its load with a reset, as CASGOPR does; its screen is the MSX boot screen
+TRANSRUN.CAS	CASGOSI	the same run as CASGOBI, into CASGO's own code
+GRAVITIC.CAS	CASGOCSM	its screen is vertical stripes, not the game

@@ -1,0 +1,16 @@
+# The cause of a failure, for the tapes whose cause an investigation established
+#. tools/games_table.py shows this code in place
+# of the symptom when the tape does not load. Columns: file, code, evidence.
+MACADAM.CAS	X	the loader decodes itself; its stub exists only in memory
+MACADAM2.CAS	X	the same loader as MACADAM.CAS
+MACADAMA.CAS	X	the same loader as MACADAM.CAS
+GESTE-A.CAS	X	calls the tape through IX, built at run time
+KE-RULEB.CAS	H	loads through BASIC with the hooks cleared
+FERNANDO.CAS	T	loads or fails with any change in the tape code's timing
+GAMES-TH.CAS	T	loads or fails with any change in the tape code's timing
+NAMPA-D.CAS	T	loads or fails with any change in the tape code's timing
+SITO-PON.CAS	T	loads or fails with any change in the tape code's timing
+AUF-WIED.CAS	T	loads or fails with any change in the tape code's timing
+HEAD-ALA.CAS	I	reads the cassette input with IN A,(0A2h) and BIT 7,A, the sound chip's port, and never calls TAPIN
+HEAD-ALI.CAS	I	the same program as HEAD-ALA.CAS
+SUPER7.CAS	Q	The Wall, its second program, puts the internal RAM in every page and loads into page 0, over T0 in I; in R the stub's OR keeps slot 3 in page 0 for the tape calls, away from T0 in the mapper

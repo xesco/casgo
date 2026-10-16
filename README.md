@@ -114,6 +114,48 @@ needs make, curl, a C++ compiler and Python 3. [tools/known.tsv](tools/known.tsv
 lists the tapes that CASGO recognises by their blocks, with the loading method each
 needs and the bytes it patches in some of them.
 
+## Testing
+
+The tests run CASGO in openMSX on test machines that boot Nextor or MSX-DOS 2 from a
+disk image. They need openMSX and three ROM files in its system ROMs folder:
+
+| ROM | Note |
+|---|---|
+| The Philips VG-8020's BIOS and BASIC | The MSX1 test machine |
+| The Philips NMS 8250's ROMs | The MSX2 test machine |
+| The MSX-DOS 2 cartridge's ROM | For the test machine that boots MSX-DOS 2 |
+
+The Makefile downloads Nextor's kernels. MSX-DOS 2's own files cannot be downloaded,
+so you put your MSX-DOS 2 zip, with `MSXDOS2.SYS` and `COMMAND2.COM` at its top, in
+`dl/MSXDOS2.zip`.
+
+`make test` builds small test tapes, one for each kind of loader that CASGO handles,
+and loads each tape with CASGO on every test machine:
+
+```
+make test
+```
+
+`make corpus` runs CASGO on every CAS file in a folder, and writes the result for
+each file and machine to `build/corpus.tsv`. The variable `CORPUS_MACHINES` picks the
+machines. Most test machines boot from a Sunrise IDE cartridge, and the machines
+`vg8020-mfrsd` and `nms8250-mfrsd` boot from a MegaFlashROM SCC+ SD in its place:
+
+```
+make corpus CORPUS=tapes CORPUS_MACHINES="vg8020 vg8020-mfrsd"
+```
+
+`tools/try.sh` starts one CAS file with CASGO in openMSX, on the VG-8020 with a
+Carnivore2, for you to play. With `--mfrsd`, the VG-8020 has the MegaFlashROM SCC+ SD
+instead:
+
+```
+tools/try.sh GAME.CAS
+```
+
+[GAMES.md](GAMES.md) gives the result of each tape in the collection of CAS files
+that `make corpus` ran.
+
 ## Author and license
 
 I wrote CASGO with Claude, Anthropic's AI, because I wanted a loader that handles

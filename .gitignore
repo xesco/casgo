@@ -9,3 +9,6 @@ openmsx/casgo.dsk
 build/
 dl/
 .tools/
+# Your own CAS files for make games and make corpus
+/games/
+/tapes/
