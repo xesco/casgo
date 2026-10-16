@@ -6,7 +6,9 @@ why and the cases that load it when CASGO's option forces them.
 Usage:
   games_table.py MANIFEST CASES.tsv RUNS SCREENS.tsv CAUSES.tsv OUT.md [CASS [FALSE.tsv [TRUE.tsv]]]
 
-MANIFEST is the corpus's tapes/MANIFEST.TXT (short name, TAB, full title).
+MANIFEST maps each corpus file to its name on File-Hunter (short name, TAB,
+File-Hunter name), as the corpus's tapes/FILEHUNTER.TXT does; a tape from a
+pack zip is named by the pack and the CAS file in it.
 CASES.tsv is the output of tools/cases.py: the variant the detector picks for
 each tape. RUNS is a folder of corpus runs, RUNS/PROGRAM/FILE/result, each the
 verdict of test/game.tcl with PROGRAM typed: CASGO, the detector, or a
@@ -191,7 +193,6 @@ def main():
     programs = sorted(p for p in os.listdir(runs) if p != "CASGO")
 
     rows = []
-    counts = collections.Counter()
     for f in sorted(picks):
         detected = verdict(os.path.join(runs, "CASGO", f, "result"))
         if detected is None:
@@ -200,14 +201,12 @@ def main():
         overruled = f in causes and causes[f] != "T"
         if (detected == "RUNS" or f in same or f in true_loads) and not overruled:
             loads, code, instead = "Yes", "", ""
-            counts["loads"] += 1
         else:
             loads = "No"
             if f in causes:
                 code = causes[f]
             else:
                 code = SYMPTOMS.get(detected, "?")
-            counts["code " + code] += 1
             # Another variant loads the tape only when its screen at the end of
             # the load is the cassette player's: a RUNS verdict alone was a
             # false load for many of these tapes.
@@ -217,13 +216,19 @@ def main():
             others.sort(key=lambda p: (p[5:-1] != pick[5:-1], p))
             if others:
                 instead = others[0]
-                counts["other"] += 1
             else:
                 instead = ""
-                counts["none"] += 1
         rows.append((game(names.get(f, f)), loads, shown(pick, patched.get(f, 0)), code,
                      "CASGO /" + instead[5:] if instead else ""))
-    rows.sort(key=lambda r: r[0].lower())
+    # Tapes with the same name and results are copies of one File-Hunter file.
+    rows = sorted(set(rows), key=lambda r: r[0].lower())
+    counts = collections.Counter()
+    for _, loads, _, code, instead in rows:
+        if loads == "Yes":
+            counts["loads"] += 1
+        else:
+            counts["code " + code] += 1
+            counts["other" if instead else "none"] += 1
 
     total = len(rows)
     with open(out, "w", encoding="utf-8") as o:
@@ -278,7 +283,9 @@ def main():
         if counts["code ?"]:
             o.write(f"| ? | The run did not finish | {counts['code ?']} |\n")
         o.write("\n## Games\n\n")
-        o.write("The table lists the tapes by their file name on File-Hunter.\n\n")
+        o.write("The table lists the tapes by their file name on File-Hunter. A tape from a pack is\n")
+        o.write("named by the pack and its CAS file, and a tape that File-Hunter does not hold keeps\n")
+        o.write("the name of its CAS file.\n\n")
         o.write("| Game | Loads | Variant | Code | Run instead |\n|---|---|---|---|---|\n")
         for t, loads, variant, code, instead in rows:
             i = f"`{instead}`" if instead else ""
