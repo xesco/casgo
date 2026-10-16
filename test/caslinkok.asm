@@ -1,8 +1,9 @@
 ; A binary for the CAS tests, laid out as a part of a CasLink3 tape: JP 9030h,
 ; the start of the ROM image at 9007h, and the image's start through a reset,
 ; LDIR / POP AF / AND 0FCh / OUT (0A8h),A / RST 30h and five 0 bytes. CASGO
-; changes the reset into CALL 006Fh and a jump to the start (DESIGN.md, Loader cases), which prints CASLINK OK; the reset would boot the
-; machine again.
+; changes the reset into CALL 006Fh and a jump to the start (docs/DESIGN.md,
+; Loader cases), which prints CASLINK OK; the reset would boot the machine
+; again.
 
 CHPUT   equ 00A2h       ; BIOS: print the character in A (Red Book ch. 4)
 

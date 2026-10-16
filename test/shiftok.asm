@@ -3,7 +3,7 @@
 ; pages 2 and 3 to pages 0 and 1, then writes the register back unchanged and
 ; prints SHIFT OK. The shifts make the detector pick R, where an OUT (0A8h),A
 ; without a read of EXPTBL alone would make it pick I
-; (DESIGN.md, Memory cases).
+; (docs/DESIGN.md, Memory cases).
 
 CHPUT   equ 00A2h       ; BIOS: print the character in A (Red Book ch. 4)
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Write GAMES.md: for each tape of the corpus, whether CASGO loads it, the
+"""Write docs/GAMES.md: for each tape of the corpus, whether CASGO loads it, the
 variant that the detector picks, and for a tape that does not load, a code for
 why and the cases that load it when CASGO's option forces them.
 
@@ -239,7 +239,7 @@ def main():
         o.write("writes this page from the runs.\n\n")
         o.write("## How a tape is judged\n\n")
         o.write("Each tape ran with `CASGO`, which picks a variant for it\n")
-        o.write("([README.md](README.md#loading-a-game)), and the tape loads when that variant\n")
+        o.write("([README.md](../README.md#loading-a-game)), and the tape loads when that variant\n")
         o.write("loads it. A run waits until the load is over, then presses space, and\n")
         o.write("then `1`, which starts many games from their menu. It holds each key down as a\n")
         o.write("person would and presses it up to three times, because a game that is still\n")

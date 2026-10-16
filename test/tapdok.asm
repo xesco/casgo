@@ -1,8 +1,8 @@
 ; A binary for the CAS tests: BLOAD"CAS:",R loads it from tape and runs it. It
 ; reads the 256-byte block after it on the tape through TAPIN and checks, after
-; each call, that D holds the byte as A does: the BIOS's TAPIN builds the byte in
-; D, and Hydlide's loader compares its checksum with D (DESIGN.md, A load, step by step).
-; It prints TAPIN D OK, or TAPIN D WRONG when D differs.
+; each call, that D holds the byte as A does: the BIOS's TAPIN builds the byte
+; in D, and Hydlide's loader compares its checksum with D (docs/DESIGN.md, A
+; load, step by step). It prints TAPIN D OK, or TAPIN D WRONG when D differs.
 
 TAPION  equ 00E1h       ; BIOS: find the next tape header (Red Book ch. 4)
 TAPIN   equ 00E4h       ; BIOS: read a byte from tape (Red Book ch. 4)

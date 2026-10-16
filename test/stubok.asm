@@ -1,6 +1,6 @@
 ; A binary for the CAS tests: BLOAD"CAS:",R loads it from tape and runs it. It
 ; reads the file after it on the tape through a stub built and used with the
-; stub loader's own code (DESIGN.md, Loader cases): the same 35 bytes of
+; stub loader's own code (docs/DESIGN.md, Loader cases): the same 35 bytes of
 ; build code, which set the stub's slots to the slot register AND FCh, so that
 ; each call has slot 0, the BIOS ROM, in page 0. The file is 16384 bytes in
 ; which byte N is (N + N / 256) mod 256. It prints STUB OK when every byte is

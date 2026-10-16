@@ -1,7 +1,7 @@
 ; A binary for the CAS tests: it prints MODULE OK. Its data holds the end of the
 ; slot module's copy of ENASLT, LD B,A / POP AF / AND A / RET, followed by
 ; CALL 0138h, which makes the detector pick the mapper case, M, on any machine
-; (DESIGN.md, Memory cases). The bytes never
+; (docs/DESIGN.md, Memory cases). The bytes never
 ; run.
 
 CHPUT   equ 00A2h       ; BIOS: print the character in A (Red Book ch. 4)

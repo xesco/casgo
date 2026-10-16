@@ -1,7 +1,7 @@
 ; A binary for the CAS tests: BLOAD"CAS:",R loads it from tape and runs it. It
 ; reads the block after it on the tape, 256 bytes in which byte N is N, through
 ; a copy of the routine with which one loader builds its tape calls at run time
-; (DESIGN.md, Loader cases): the routine writes the low byte of
+; (docs/DESIGN.md, Loader cases): the routine writes the low byte of
 ; a CALL 0000h and makes the call with the BIOS ROM in page 0. It prints
 ; NAMCO OK when every byte is right, or NAMCO BAD DATA otherwise. Without
 ; CASGO's change of the call's high byte, the call reaches the ROM's TAPION,

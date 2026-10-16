@@ -3,7 +3,7 @@
 ; and 1 with IN A,(0A8h) / AND 0F0h / OUT (0A8h),A, as Don Quijote's SCREEN
 ; file does. BASIC's next BLOAD then reads the tape with the ROM in page 0,
 ; unless CASGO's change of that sequence puts T0 there
-; (DESIGN.md, Loader cases).
+; (docs/DESIGN.md, Loader cases).
 
 HOOKS   equ 0FD9Ah      ; the hooks, FD9Ah-FFC9h (Red Book ch. 6)
 

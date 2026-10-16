@@ -6,9 +6,9 @@ MSX-DOS 2 prompt with the CAS file's name, and the game then loads as it would f
 tape, but in seconds. This page tells MSX owners how to run it, and two more pages
 cover the rest:
 
-- [DESIGN.md](DESIGN.md) explains how CASGO works, for anyone who reads or changes
+- [DESIGN.md](docs/DESIGN.md) explains how CASGO works, for anyone who reads or changes
   its source.
-- [LIMITS.md](LIMITS.md) lists the kinds of tape that do not load, and why.
+- [LIMITS.md](docs/LIMITS.md) lists the kinds of tape that do not load, and why.
 
 ## Requirements
 
@@ -58,7 +58,7 @@ GAME.CAS: CASGOM /CB
 | `P`, `C`, `N`, `S`, `B` | How the tape's loader reaches the tape |
 | `M`, `R`, `I`, `T` | Where the game's memory and CASGO's copy of the BIOS go |
 
-[DESIGN.md](DESIGN.md#loader-cases) describes each letter. On an MSX2 with a RAM
+[DESIGN.md](docs/DESIGN.md#loader-cases) describes each letter. On an MSX2 with a RAM
 cartridge, a few games load only with `/M`.
 
 ## Games on two sides
@@ -153,7 +153,7 @@ instead:
 tools/try.sh GAME.CAS
 ```
 
-[GAMES.md](GAMES.md) gives the result of each tape in the collection of CAS files
+[GAMES.md](docs/GAMES.md) gives the result of each tape in the collection of CAS files
 that `make corpus` ran.
 
 ## Author and license

@@ -9,7 +9,7 @@ cases whose rule the file matches (C calls, N Namco, S stub, B BASIC; P when non
 does), and the cases the detector picks on a machine with internal RAM that has RAM
 in its page 0 and on a machine without internal RAM, each as CASGO and the loader
 and memory letters: CASGOCBR is the variant CASGOR with the option /CB. The
-rules (DESIGN.md, The detector and the variants):
+rules (docs/DESIGN.md, The detector and the variants):
 
 - C: a block holds OUT (0A8h),A, and the same block or the one before holds a
   CALL or JP to 00E1h, 00E4h or 00E7h, and the file does not hold CasLink3's
@@ -31,7 +31,7 @@ rules (DESIGN.md, The detector and the variants):
   when it holds OUT (0A8h),A and no LD A,(0FCC1h); else R.
 - A known tape, one of tools/known.tsv, gets the cases of its entry instead: the
   loader letters, and the memory letter when it is M or the machine has internal
-  RAM with RAM in its page 0 (DESIGN.md, The detector and the variants).
+  RAM with RAM in its page 0 (docs/DESIGN.md, The detector and the variants).
 - No rule looks at the bytes that a binary file (BSAVE) loads below 8000h:
   BLOAD puts them into ROM on a cassette machine, so they never run.
 """

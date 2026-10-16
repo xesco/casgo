@@ -56,7 +56,7 @@ option before the file's name, such as `CASGO /SM GAME.CAS`.
 
 The detector picks by rules: it looks for byte patterns in the file that tell which
 kind of loader the tape has. A few tapes have code that no rule tells apart, and
-[tools/known.tsv](tools/known.tsv) lists them, with the cases each needs and the
+[tools/known.tsv](../tools/known.tsv) lists them, with the cases each needs and the
 bytes CASGO patches in some of them.
 
 ### Loader cases

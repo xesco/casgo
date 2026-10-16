@@ -5,7 +5,7 @@
 ; cassette machine page 0 holds the ROM in slot 0, and that A puts slot 0 in
 ; page 1 too. Under CASGO page 0 holds T0, and without CASGO's change of the
 ; second call page 1 gets T0's slot instead of the BASIC ROM, and BASIC
-; crashes on the return (DESIGN.md, Loader cases).
+; crashes on the return (docs/DESIGN.md, Loader cases).
 
 PSLOT   equ 0A8h        ; primary slot register (Red Book ch. 1)
 EXPTBL  equ 0FCC1h      ; which slots are expanded (Red Book ch. 6)

@@ -11,7 +11,7 @@ page from the runs.
 ## How a tape is judged
 
 Each tape ran with `CASGO`, which picks a variant for it
-([README.md](README.md#loading-a-game)), and the tape loads when that variant
+([README.md](../README.md#loading-a-game)), and the tape loads when that variant
 loads it. A run waits until the load is over, then presses space, and then `1`,
 which starts many games from their menu. It holds each key down as a person would
 and presses it up to three times, because a game that is still setting up misses a

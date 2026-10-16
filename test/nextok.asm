@@ -1,9 +1,9 @@
 ; A binary for the CAS tests: BLOAD"CAS:",R loads it from tape and runs it. It
 ; reads the block after it on the tape, a headerless block of 256 bytes, to
-; NEXTB and runs it (test/nextb.asm). That block puts the BIOS ROM in page 0
-; and calls read, below, to read one more block, as Moonwalker's loader does:
-; the tape calls are in this block, and the OUT (0A8h),A that makes them need
-; the rewrite is in the next (DESIGN.md, Loader cases). Without the rewrite,
+; NEXTB and runs it (test/nextb.asm). That block puts the BIOS ROM in page 0 and
+; calls read, below, to read one more block, as Moonwalker's loader does: the
+; tape calls are in this block, and the OUT (0A8h),A that makes them need the
+; rewrite is in the next (docs/DESIGN.md, Loader cases). Without the rewrite,
 ; read's TAPION reaches the ROM's, which waits for a real tape.
 
 TAPION  equ 00E1h       ; BIOS: find the next tape header (Red Book ch. 4)

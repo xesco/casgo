@@ -1,6 +1,6 @@
 ; A binary for the CAS tests: BLOAD"CAS:",R loads it from tape and runs it. It
 ; reads the file after it on the tape through a stub built as Space Harrier
-; II's loader builds it (DESIGN.md, Loader cases): with LD HL,nn / PUSH HL,
+; II's loader builds it (docs/DESIGN.md, Loader cases): with LD HL,nn / PUSH HL,
 ; and with the slots for each call computed by IN A,(0A8h) / LD H,A / AND 0FCh /
 ; LD L,A, which put slot 0, the BIOS ROM, in page 0. The file is 16384 bytes
 ; in which byte N is (N + N / 256) mod 256. It prints STUB HL OK when every

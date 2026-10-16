@@ -5,8 +5,9 @@
 ;
 ; TAPIN leaves interrupts off, so the frame interrupts wait for the next refill,
 ; where DOS enables them: there they test the DOS gate's interrupt table
-; (DESIGN.md, A load, step by step). A pause after each byte makes each refill
-; come at least one frame after the one before, so an interrupt waits for each.
+; (docs/DESIGN.md, A load, step by step). A pause after each byte makes each
+; refill come at least one frame after the one before, so an interrupt waits for
+; each.
 
 CHPUT   equ 00A2h       ; BIOS: print the character in A (Red Book ch. 4)
 TAPION  equ 00E1h       ; BIOS: find the next tape header (Red Book ch. 4)

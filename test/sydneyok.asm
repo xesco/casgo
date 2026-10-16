@@ -1,7 +1,7 @@
 ; A binary for the CAS tests: it prints SYDNEY OK. Its data holds the start of
 ; the Sydney engine's search for RAM for page 1, IN A,(0A8h) / AND 0F3h /
 ; PUSH AF / AND 30h / LD B,A / POP AF / SUB 04h, which makes the detector pick
-; the mapper case, M, on any machine (DESIGN.md, Memory cases).
+; the mapper case, M, on any machine (docs/DESIGN.md, Memory cases).
 ; The bytes never run.
 
 CHPUT   equ 00A2h       ; BIOS: print the character in A (Red Book ch. 4)

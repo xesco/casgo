@@ -3,7 +3,7 @@
 ; LD H,00h / LD A,(0FCC1h), which reads EXPTBL's byte for slot 1 where it means
 ; the main ROM's slot. It prints EXPTBL OK when CASGO's BASIC case changed the
 ; first load to LD A,(0FCC1h), and EXPTBL NOT CHANGED otherwise
-; (DESIGN.md, Loader cases). The data never runs, and an OUT (0A8h),A
+; (docs/DESIGN.md, Loader cases). The data never runs, and an OUT (0A8h),A
 ; in it makes the detector pick the BASIC case.
 
 CHPUT   equ 00A2h       ; BIOS: print the character in A (Red Book ch. 4)
