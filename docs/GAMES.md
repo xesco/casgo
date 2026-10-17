@@ -10,12 +10,11 @@ page from the runs.
 
 ## How a tape is judged
 
-Each tape ran with `CASGO`, which picks a variant for it
-([README.md](../README.md#loading-a-game)), and the tape loads when that variant
-loads it. A run waits until the load is over, then presses space, and then `1`,
-which starts many games from their menu. It holds each key down as a person would
-and presses it up to three times, because a game that is still setting up misses a
-short press. A tape loads when the screen changes during the key presses
+Each tape ran with `CASGO`, which picks a variant for it, and the tape loads when
+that variant loads it. A run waits until the load is over, then presses space, and
+then `1`, which starts many games from their menu. It holds each key down as a
+person would and presses it up to three times, because a game that is still setting
+up misses a short press. A tape loads when the screen changes during the key presses
 (`test/game.tcl`). Many games wait at a menu for a key that is neither space nor
 `1`, so a tape whose screen does not change ran in openMSX's own cassette player
 too: it loads when CASGO's screen at the end of the load is the same as the cassette
@@ -25,13 +24,14 @@ investigation found such a run does not load, and gets the code of its cause. A 
 that did not load ran with the other cases forced too, and the column Run instead
 names a command whose screen at the end of the load is the same as the cassette
 player's. A number after the letters, as in `CASGOR /P3`, is a known tape's patch,
-which changes a few of its bytes as it loads ([DESIGN.md](DESIGN.md#the-detector-and-the-variants)). A
-game whose screen depends on chance, such as one that deals its cards at random,
-loads when an investigation found it running (`test/true_loads.tsv`). So does a game
-that draws its menu slowly, when CASGO's run drew more of the menu than the cassette
-player's run did. The corpus holds side A tapes that openMSX's cassette player
-loads: a second side needs the first one before it, and a tape whose cassette run
-ends in an error or at BASIC's prompt cannot be compared, so both are left out.
+which changes a few of its bytes as it loads
+([DESIGN.md](DESIGN.md#the-detector-and-the-variants)). A game whose screen depends
+on chance, such as one that deals its cards at random, loads when an investigation
+found it running (`test/true_loads.tsv`). So does a game that draws its menu slowly,
+when CASGO's run drew more of the menu than the cassette player's run did. The
+corpus holds side A tapes that openMSX's cassette player loads: a second side needs
+the first one before it, and a tape whose cassette run ends in an error or at
+BASIC's prompt cannot be compared, so both are left out.
 
 ## Summary
 
