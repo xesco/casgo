@@ -271,6 +271,7 @@ stub_value_r:
         ret
 
 stub_up:     db 0       ; 1 when the CAS file holds a search from slot 0 up
+stub_called: db 0       ; 1 when the stub patch calls stub_l or stub_hl
         ENDIF
 
 iram_sp:     dw 0

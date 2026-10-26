@@ -1101,6 +1101,25 @@ stage2_setup:
         and 03h
         ENDIF
         ld (tr_prim+1),a
+        IF CASE_S && TRAMPOLINES
+        ld (stub_l.slot+1),a
+        push af
+        push bc
+        IF MEM_R
+        ld a,(stub_called)
+        or a
+        jr nz,.stub_kept
+        ENDIF
+        ld hl,stub_hl   ; no patch calls stub_l or stub_hl: SLTATR's bytes go
+        ld b,stub_end-stub_hl ; back to 0, as on a machine without them
+.stub_clear:
+        ld (hl),0
+        inc hl
+        djnz .stub_clear
+.stub_kept:
+        pop bc
+        pop af
+        ENDIF
         IF CASE_S
         IF MEM_R
         push af

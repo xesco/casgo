@@ -161,11 +161,11 @@ set cases [subst {
         {""                     "NAMCO OK"}
     }
     dstub {
-        {"CASGO STUB.CAS"       "STUB.CAS: CASGOI /S"    "STUB.CAS: CASGOM /S"}
+        {"CASGO STUB.CAS"       "STUB.CAS: CASGOI /S"    "STUB.CAS: CASGOM /S"    "STUB.CAS: CASGOR /S"}
         {""                     "STUB OK"}
     }
     dstubhl {
-        {"CASGO STUBHL.CAS"     "STUBHL.CAS: CASGOI /S"  "STUBHL.CAS: CASGOM /S"}
+        {"CASGO STUBHL.CAS"     "STUBHL.CAS: CASGOI /S"  "STUBHL.CAS: CASGOM /S"  "STUBHL.CAS: CASGOR /S"}
         {""                     "STUB HL OK"}
     }
     dforce {

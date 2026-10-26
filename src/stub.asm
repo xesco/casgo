@@ -41,6 +41,15 @@ stub_patch:
         jr nz,.find
         jr .family
 .slots:
+        IF MEM_R
+        call stub_call_case
+        jr nc,.slots_value
+        ld a,c
+        add a,3                 ; AND 0FCh / LD L,A becomes CALL stub_l
+        ld hl,stub_l
+        jp stub_call
+.slots_value:
+        ENDIF
         call stub_value
         push af
         ld a,0F6h               ; AND 0FCh becomes OR T0's slot
@@ -78,6 +87,18 @@ stub_patch:
         ld b,build_tail_size
         call pt_match
         ret nz
+        IF MEM_R
+        call stub_call_case
+        jr nc,.family_value
+        xor a                   ; LD L,A becomes NOP
+        ld (pt_value),a
+        ld a,34
+        call pt_write_x
+        ld a,31                 ; IN H,(C) / AND H becomes CALL stub_hl
+        ld hl,stub_hl
+        jp stub_call
+.family_value:
+        ENDIF
         ld a,7Eh                ; LD A,H becomes LD A,(HL), (FC8Eh)
         ld (pt_value),a
         xor a
@@ -109,6 +130,54 @@ stub_value:
         ENDIF
 
         IF MEM_R
+; Returns carry when the loader must call stub_l or stub_hl (entries.asm) for
+; its stub's page 0: in R, when the internal RAM's slot is below T0's, the
+; mapper's, and the CAS file holds no search from slot 0 up. Page 0 then shows
+; the ROM or the internal RAM when the loader builds its stub, and neither an OR
+; nor an XOR with one value gives T0's slot for both. Keeps BC and HL.
+stub_call_case:
+        ld a,(stub_up)
+        or a
+        ret nz                  ; no carry: stub_value's XOR
+        ld a,(RAMAD0)
+        and 03h
+        push bc
+        ld b,a
+        ld a,(iram_slot)
+        cp b                    ; carry when the internal RAM's slot is below
+        pop bc
+        ret
+
+; Writes CALL HL over the 3 bytes A places after pt_off, and notes in
+; stub_called that stage 2 keeps the routine.
+stub_call:
+        push hl
+        ld b,a
+        ld a,1
+        ld (stub_called),a
+        ld a,b
+        ld a,0CDh               ; CALL
+        ld (pt_value),a
+        ld a,b
+        push bc
+        call pt_write_x
+        pop bc
+        pop hl
+        ld a,l
+        ld (pt_value),a
+        inc b
+        ld a,b
+        push bc
+        push hl
+        call pt_write_x
+        pop hl
+        pop bc
+        ld a,h
+        ld (pt_value),a
+        inc b
+        ld a,b
+        jp pt_write_x
+
 ; At the 7Eh of a BIT 7,(HL) at HL: sets stub_up when the search for RAM from
 ; slot 0 up ends there (search_up_bytes, patterns.asm). Changes AF, BC and DE.
 up_check:

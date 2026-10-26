@@ -959,8 +959,14 @@ pick:
         ld a,(hl)       ; the loader case's last letter: S in the stub case
         inc hl
         cp "S"
-        ld a,"I"
+        jr nz,.not_s
+        ld a,(has_low)  ; the stub case: I, or R on a machine whose internal
+        or a            ; RAM's slot is below the mapper's, where I and the
+        ld a,"I"        ; loader's page 0 would share the internal RAM
         jr z,.memory_letter
+        ld a,"R"
+        jr .memory_letter
+.not_s:
         ld a,(d_move)
         or a
         jr nz,.r
