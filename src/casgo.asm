@@ -118,7 +118,7 @@ DROPS_MAX equ 4
 PATH_SIZE equ 64
 SCAN_SIZE equ 256
 SCAN_CHUNK equ DATA_SIZE ; one data segment's bytes, so a read fills a segment
-SCAN_KEEP equ 11         ; the longest look-back, the BASIC case's slot calls'
+SCAN_KEEP equ 12         ; the longest look-back, the search from slot 0 up's
 
 ; Page 1 is the window through which stage 2 writes T0 and reads P3, so an address
 ; seen there is the address in the segment plus WINDOW.
@@ -1102,7 +1102,14 @@ stage2_setup:
         ENDIF
         ld (tr_prim+1),a
         IF CASE_S
+        IF MEM_R
+        push af
+        call stub_value_r       ; the value the stub patch combines (stub.asm)
         ld (tr_t+1),a
+        pop af
+        ELSE
+        ld (tr_t+1),a
+        ENDIF
         ENDIF
         IF FIND_IRAM
         ld a,0FFh       ; no subslot, or page 3 cannot reach T0's subslot register

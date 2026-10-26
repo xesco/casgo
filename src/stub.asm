@@ -41,19 +41,19 @@ stub_patch:
         jr nz,.find
         jr .family
 .slots:
+        call stub_value
+        push af
         ld a,0F6h               ; AND 0FCh becomes OR T0's slot
+        jr nc,.or_n
+        ld a,0EEh               ; or XOR stub_value's value
+.or_n:
         ld (pt_value),a
         ld a,c
         add a,3
         push bc
         call pt_write_x
         pop bc
-        IF T0_IRAM
-        ld a,(iram_slot)        ; T0 is in the internal RAM
-        ELSE
-        ld a,(RAMAD0)
-        and 03h
-        ENDIF
+        pop af
         ld (pt_value),a
         ld a,c
         add a,4
@@ -82,10 +82,59 @@ stub_patch:
         ld (pt_value),a
         xor a
         call pt_write_x
+        call stub_value
         ld a,0B4h               ; AND H becomes OR H
+        jr nc,.or_h
+        ld a,0ACh               ; or XOR H
+.or_h:
         ld (pt_value),a
         ld a,33
         jp pt_write_x
+
+; Returns in A the value that the stub's slot code combines with the slot
+; register for the stub's page 0, with carry when that combination is an XOR
+; and no carry when it is an OR: T0's slot, or in R stub_value_r's value
+; (iram.asm).
+stub_value:
+        IF T0_IRAM
+        ld a,(iram_slot)        ; T0 is in the internal RAM
+        or a
+        ret
+        ELSEIF MEM_R
+        jp stub_value_r
+        ELSE
+        ld a,(RAMAD0)
+        and 03h
+        ret
+        ENDIF
+
+        IF MEM_R
+; At the 7Eh of a BIT 7,(HL) at HL: sets stub_up when the search for RAM from
+; slot 0 up ends there (search_up_bytes, patterns.asm). Changes AF, BC and DE.
+up_check:
+        ld de,search_up_bytes
+        ld b,(search_up_bytes_end-search_up_bytes)/2
+.byte:
+        push hl
+        ld a,(de)               ; the byte's place before HL
+        inc de
+        ld c,a
+        ld a,l
+        sub c
+        ld l,a
+        ld a,h
+        sbc a,0
+        ld h,a
+        ld a,(de)               ; its value
+        inc de
+        cp (hl)
+        pop hl
+        ret nz
+        djnz .byte
+        ld a,1
+        ld (stub_up),a
+        ret
+        ENDIF
 
 ; The loader's build code, 35 bytes from LD A,H to LD L,A, but for the entry's
 ; low byte at its 17th byte; and the slot code that other loaders use instead,

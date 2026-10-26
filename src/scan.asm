@@ -22,8 +22,9 @@ NOTE_RESET  equ 9       ; caslink_reset, in every case
 ; that scan_check looks back only at those bytes: the header's 74h, the F7h of
 ; caslink_reset, which every case patches, a tape
 ; call's or the Namco call's 00h, the stub's build sequence's D5h or E5h, the
-; quote after BLOAD, rom_back's A8h, the 40h of slot1_check's LD HL,4000h, and
-; the FCh of exptbl_check's LD A,(0FCC1h).
+; quote after BLOAD, rom_back's A8h, the 40h of slot1_check's LD HL,4000h, the
+; FCh of exptbl_check's LD A,(0FCC1h), and in R the 7Eh of up_check's
+; BIT 7,(HL).
 scan_init:
         ld hl,scan_table
         ld de,scan_table+1
@@ -50,6 +51,9 @@ scan_init:
         jr z,.no_stub
         ld (scan_table+0D5h),a
         ld (scan_table+0E5h),a
+        IF MEM_R
+        ld (scan_table+7Eh),a   ; the search from slot 0 up's BIT 7,(HL)
+        ENDIF
 .no_stub:
         ENDIF
         IF CASE_B
@@ -93,6 +97,13 @@ scan_check:
         call exptbl_check
         jr .done
 .not_exptbl:
+        ENDIF
+        IF CASE_S && MEM_R
+        cp 7Eh
+        jr nz,.not_up
+        call up_check
+        jr .done
+.not_up:
         ENDIF
         IF CASE_C || CASE_N
         or a

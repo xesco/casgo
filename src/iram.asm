@@ -240,6 +240,39 @@ iram_copier:
 iram_copier_end:
         ENDIF
 
+        IF MEM_R && CASE_S
+; Returns in A the value that the stub case's patch combines with the slot
+; register for the stub's page 0, with carry when the combination is an XOR and
+; no carry when it is an OR (stub.asm). An OR with T0's slot gives T0's slot
+; only when page 0's slot bits are among T0's. When the CAS file holds a search
+; for RAM from slot 0 up (stub_up) and the internal RAM's slot is below T0's,
+; the mapper's, the search has put the internal RAM in page 0 by the time the
+; loader builds its stub, and an XOR with both slots gives T0's slot. Here, in
+; page 2, because stage 1 and stage 2 both call it. Keeps BC.
+stub_value_r:
+        ld a,(RAMAD0)
+        and 03h
+        push bc
+        ld b,a
+        ld a,(stub_up)
+        or a
+        jr z,.or
+        ld a,(iram_slot)
+        cp b
+        jr nc,.or
+        xor b
+        scf
+        pop bc
+        ret
+.or:
+        ld a,b
+        or a
+        pop bc
+        ret
+
+stub_up:     db 0       ; 1 when the CAS file holds a search from slot 0 up
+        ENDIF
+
 iram_sp:     dw 0
 iram_a8:     db 0
 iram_toggle: db 0
