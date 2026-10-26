@@ -116,7 +116,9 @@ $(foreach m,$(MEMORY_CASES),$(eval $(call variant,$(m))))
 # SHORT.CAS, a BASIC program that BLOADs a binary whose block is one byte short, so
 # that BLOAD reads the next header's first byte, then BLOADs TEST.CAS's binary by
 # its name and prints SHORT OK; DOWN.CAS, a binary whose data holds a search for
-# RAM for page 0 from slot 3 down, and that prints DOWN OK.
+# RAM for page 0 from slot 3 down, and that prints DOWN OK; UP.CAS, a binary whose
+# data holds a slot register write and a search for RAM for page 0 from slot 0
+# up, and that prints UP OK.
 $(BUILD)/%.bin: test/%.asm $(SJASMPLUS)
 	@mkdir -p $(BUILD)
 	$(SJASMPLUS) --nologo --msg=war --raw=$@ $<
@@ -164,6 +166,9 @@ $(BUILD)/CASLINK.CAS: tools/mkcas.py $(BUILD)/caslinkok.bin
 
 $(BUILD)/DOWN.CAS: tools/mkcas.py $(BUILD)/downok.bin
 	python3 -I tools/mkcas.py $@ binary DOWN 9000 9000 $(BUILD)/downok.bin
+
+$(BUILD)/UP.CAS: tools/mkcas.py $(BUILD)/upok.bin
+	python3 -I tools/mkcas.py $@ binary UP 9000 9000 $(BUILD)/upok.bin
 
 $(BUILD)/SLOT3.CAS: tools/mkcas.py $(BUILD)/slot3ok.bin
 	python3 -I tools/mkcas.py $@ binary SLOT3 9000 9000 $(BUILD)/slot3ok.bin
@@ -362,7 +367,7 @@ DISKDEP_phc28s         := $(BUILD)/test.dsk
 # MSXDOS2.SYS through the boot sector's code, which tools/mkdisk.py does not
 # write; openMSX gives a folder a boot sector with that code.
 TEST_FILES := $(BUILD)/CASGO.COM $(VARIANT_COMS) \
-              $(addprefix $(BUILD)/,TEST.CAS SKEWED.CAS BADTYPE.CAS NOHDR.CAS BIG.CAS BASOK.CAS ASCOK.CAS IM2.CAS STUB.CAS NEXT.CAS PARD.CAS NAMCO.CAS CB.CAS DROP.CAS STUBHL.CAS TAPD.CAS HOOK.CAS SHIFT.CAS SLOTS.CAS MODULE.CAS SYDNEY.CAS LEVEL9.CAS PAGE21.CAS PAGE1.CAS KNOWN.CAS KNOWNB.CAS PATCH.CAS CASLINK.CAS EXPTBL.CAS SLOT3.CAS SHORT.CAS DOWN.CAS)
+              $(addprefix $(BUILD)/,TEST.CAS SKEWED.CAS BADTYPE.CAS NOHDR.CAS BIG.CAS BASOK.CAS ASCOK.CAS IM2.CAS STUB.CAS NEXT.CAS PARD.CAS NAMCO.CAS CB.CAS DROP.CAS STUBHL.CAS TAPD.CAS HOOK.CAS SHIFT.CAS SLOTS.CAS MODULE.CAS SYDNEY.CAS LEVEL9.CAS PAGE21.CAS PAGE1.CAS KNOWN.CAS KNOWNB.CAS PATCH.CAS CASLINK.CAS EXPTBL.CAS SLOT3.CAS SHORT.CAS DOWN.CAS UP.CAS)
 NEXTOR_FILES := $(DL)/NEXTOR.SYS $(DL)/COMMAND2.COM $(TEST_FILES)
 DOS2_FILES   := $(DL)/msxdos2/MSXDOS2.SYS $(DL)/msxdos2/COMMAND2.COM $(TEST_FILES)
 
@@ -410,14 +415,15 @@ $(EMU_MFRSD)/hardwareconfig.xml: emu/casgo_mfrsd.xml $(DL)/$(NEXTOR_MFRSD_ROM)
 # and dexptbl the BASIC loads, dshift, dmodule, dsydney, dlevel9, dpage21, dpage1
 # and dslot3 the memory rules for the slot shift, the slot module, the Sydney
 # engine, Level 9's search for RAM, page 2's slot put in page 1, the search for
-# RAM for page 1 alone and the copy into page 0 of slot 3, ddown the search for
-# RAM for page 0 from slot 3 down, dforce cases forced by the option, dknown and
-# dknownb a known tape by block lengths and by first bytes, dpatch a known tape's
-# patch, and dcaslink the change of CasLink3's reset; each checks the variant and
-# option that the detector prints, then the load.
+# RAM for page 1 alone and the copy into page 0 of slot 3, ddown and dup the
+# searches for RAM for page 0 from slot 3 down and from slot 0 up, dforce cases
+# forced by the option, dknown and dknownb a known tape by block lengths and by
+# first bytes, dpatch a known tape's patch, and dcaslink the change of CasLink3's
+# reset; each checks the variant and option that the detector prints, then the
+# load.
 TEST_CASES := bin binr bini bint bas asc im2 tapd stub stubr stubt stubhl next nextr nexti nextt \
               namco pard pardt cs \
-              cb drop hook slots exptbl short detect dnext dnamco dstub dstubhl dpard dcb ddrop dhook dslots dexptbl dshift dmodule dsydney dlevel9 dpage21 dpage1 dslot3 ddown dforce dknown dknownb dpatch dcaslink
+              cb drop hook slots exptbl short detect dnext dnamco dstub dstubhl dpard dcb ddrop dhook dslots dexptbl dshift dmodule dsydney dlevel9 dpage21 dpage1 dslot3 ddown dup dforce dknown dknownb dpatch dcaslink
 
 test: $(addprefix test-,$(TEST_MACHINES))
 

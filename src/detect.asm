@@ -369,9 +369,18 @@ check:
         ld de,search_de_bytes
         ld b,(search_de_bytes_end-search_de_bytes)/2
         call match_before
-        jp nz,.done
+        jr nz,.search_up
         ld a,1
         ld (d_down),a
+        jp .done
+.search_up:
+        ; The same search from slot 0 up
+        ld de,search_up_bytes
+        ld b,(search_up_bytes_end-search_up_bytes)/2
+        call match_before
+        jp nz,.done
+        ld a,1
+        ld (d_up),a
         jp .done
 .slot1:
         ; The slot calls: the loader copies code into the RAM it finds for page
@@ -989,22 +998,39 @@ pick:
         ld (hl),0
         ret
 
-; Returns in A the memory letter for the letter in A. A search from slot 3 down
-; for RAM for page 0 (d_down) takes the first RAM it finds, which is the internal
-; RAM only when the internal RAM's slot is above the mapper's. When it is below
-; (has_low), the search finds the mapper, whose page 0 holds T0 in M and R, so
-; such a file gets the letter that puts T0 in the internal RAM and keeps pages 2
-; and 3 where they were: T for M and I for R. Keeps BC.
+; Returns in A the memory letter for the letter in A. A search for RAM for page
+; 0 takes the first RAM it finds. When the internal RAM's slot is below the
+; mapper's (has_low), a search from slot 3 down (d_down) finds the mapper, whose
+; page 0 holds T0 in M and R, so such a file gets the letter that puts T0 in the
+; internal RAM and keeps pages 2 and 3 where they were: T for M and I for R. A
+; search from slot 0 up (d_up) finds the internal RAM, whose page 0 holds T0 in I
+; and T, so such a file gets M for T and R for I. Keeps BC.
 low_letter:
         push bc
         ld b,a
-        ld a,(d_down)
-        ld c,a
         ld a,(has_low)
-        and c
+        or a
+        jr z,.keep
+        ld a,(d_down)
+        or a
+        jr nz,.down
+        ld a,(d_up)
+        or a
+        jr z,.keep
         ld a,b
         pop bc
-        ret z
+        cp "T"
+        jr nz,.i
+        ld a,"M"
+        ret
+.i:
+        cp "I"
+        ret nz
+        ld a,"R"
+        ret
+.down:
+        ld a,b
+        pop bc
         cp "M"
         jr nz,.r
         ld a,"T"
@@ -1013,6 +1039,10 @@ low_letter:
         cp "R"
         ret nz
         ld a,"I"
+        ret
+.keep:
+        ld a,b
+        pop bc
         ret
 
 ; The known tapes: a tape matches an entry of known_table when its blocks from
@@ -1445,7 +1475,7 @@ print_dos:
 banner:
         db "CASGO "
         include "version.asm"   ; the version, which the Makefile writes
-        db 13,10,"$"
+        db " by Xesco",13,10,"$"
 usage:
         db "Usage: CASGO [/CASES] FILE.CAS",13,10,"$"
 unknown_option:
@@ -1494,6 +1524,7 @@ d_out_any: db 0         ; 1 when the file writes the slot register
 d_exptbl:  db 0         ; 1 when the file reads EXPTBL with LD A,(0FCC1h)
 d_move:    db 0         ; 1 when the file takes the internal RAM for page 0
 d_down:    db 0         ; 1 when it finds that RAM by a search from slot 3 down
+d_up:      db 0         ; 1 when the file searches for RAM from slot 0 up
 d_caslink: db 0         ; 1 when the file holds CasLink3's text: no calls case
 d_module:  db 0         ; 1 when the file holds code that needs M
 d_slot3:   db 0         ; 1 when the file copies into page 0 of slot 3

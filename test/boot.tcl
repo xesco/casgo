@@ -240,6 +240,10 @@ set cases [subst {
         {"CASGO DOWN.CAS"       "DOWN.CAS: CASGOR"    "DOWN.CAS: CASGOM"    "DOWN.CAS: CASGOI"}
         {""                     "DOWN OK"}
     }
+    dup {
+        {"CASGO UP.CAS"         "UP.CAS: CASGOI"      "UP.CAS: CASGOM"      "UP.CAS: CASGOR"}
+        {""                     "UP OK"}
+    }
     dshift {
         {"CASGO SHIFT.CAS"      "SHIFT.CAS: CASGOR"   "SHIFT.CAS: CASGOM"}
         {""                     "SHIFT OK"}
