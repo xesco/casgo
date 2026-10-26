@@ -1026,6 +1026,26 @@ stage2_command_end:
         assert STAGE2 == 0A000h         ; the address typed in the line above
         assert stage2_command_end-stage2_command-1 < 40 ; a ring of 40 holds 39 keys
 
+        IF FIND_IRAM
+; Puts A in the slot register and returns Z when the byte at BFFEh is then RAM,
+; with the slot register back to D. iram_find calls it to test page 2 of a slot,
+; with interrupts off. iram_find, its variables and its stack are in page 2, so
+; this is in page 0, and it uses no stack until page 2 is back.
+iram_page2:
+        out (PSLOT),a   ; page 2: the slot tried
+        ld hl,0BFFEh
+        ld a,(hl)
+        cpl
+        ld (hl),a
+        cp (hl)
+        cpl
+        ld (hl),a
+        ld a,d
+        out (PSLOT),a   ; page 2 back, and with it the stack
+        ret
+        assert $ <= 8000h       ; it switches page 2, so it must stay out of it
+        ENDIF
+
 ;----------------------------------------------------------------------------
 ; Stage 2, in BASIC: assembled for STAGE2 and copied there by stage 1,
 ; followed by the image of the tape routines.

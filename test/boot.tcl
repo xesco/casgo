@@ -4,7 +4,8 @@
 # The Makefile passes in the environment: CASGO_DISK, the disk image or folder;
 # CASGO_DRIVE, the openMSX command that inserts it (hda for the IDE, diska for
 # the floppy); CASGO_IRAM, 1 when the machine has internal RAM in a slot of its
-# own; CASGO_CASE, the case to run; and CASGO_RESULT, the result file.
+# own; CASGO_LOW, 1 when that RAM's slot is below the mapper's; CASGO_CASE, the
+# case to run; and CASGO_RESULT, the result file.
 # Times are emulated seconds, which pass quickly because the throttle is off.
 
 set renderer none
@@ -47,9 +48,11 @@ proc wait_for_line {line timeout next} {
 
 # The steps of each case: a command typed at the A> prompt and the line it must
 # print, and for the R and I variants the line they print instead on a machine
-# without internal RAM (CASGO_IRAM is 0). In the bin case the error cases come
-# first, because each one returns to the prompt; every case ends with a load,
-# which ends in BASIC, or with the error of a machine without internal RAM.
+# without internal RAM (CASGO_IRAM is 0), and for the detector the line it prints
+# instead on a machine whose internal RAM is below the mapper (CASGO_LOW is 1).
+# In the bin case the error cases come first, because each one returns to the
+# prompt; every case ends with a load, which ends in BASIC, or with the error of
+# a machine without internal RAM.
 # SKEWED.CAS has its headers at offsets that are not multiples of 8; its program
 # prints BIN OK only if CASGO's CLEAR left HIMEM at F380h. A step with no command
 # waits for one more line of the command before it.
@@ -202,7 +205,7 @@ set cases [subst {
         {""                     "HOOK OK"}
     }
     dslots {
-        {"CASGO SLOTS.CAS"      "SLOTS.CAS: CASGOR /B"   "SLOTS.CAS: CASGOM /B"}
+        {"CASGO SLOTS.CAS"      "SLOTS.CAS: CASGOR /B"   "SLOTS.CAS: CASGOM /B"   "SLOTS.CAS: CASGOI /B"}
         {""                     "SLOTS OK"}
     }
     dmodule {
@@ -233,6 +236,10 @@ set cases [subst {
         {"CASGO SLOT3.CAS"      "SLOT3.CAS: CASGOR"   "SLOT3.CAS: CASGOM"}
         {""                     "SLOT3 OK"}
     }
+    ddown {
+        {"CASGO DOWN.CAS"       "DOWN.CAS: CASGOR"    "DOWN.CAS: CASGOM"    "DOWN.CAS: CASGOI"}
+        {""                     "DOWN OK"}
+    }
     dshift {
         {"CASGO SHIFT.CAS"      "SHIFT.CAS: CASGOR"   "SHIFT.CAS: CASGOM"}
         {""                     "SHIFT OK"}
@@ -245,9 +252,12 @@ proc run_steps {steps} {
         finish_cleared
         return
     }
-    lassign [lindex $steps 0] command expected no_iram
+    lassign [lindex $steps 0] command expected no_iram low
     if {$no_iram ne "" && !$::env(CASGO_IRAM)} {
         set expected $no_iram
+    }
+    if {$low ne "" && $::env(CASGO_LOW)} {
+        set expected $low
     }
     if {$command eq ""} {
         # The same command goes on: only the next line to wait for.

@@ -115,7 +115,8 @@ $(foreach m,$(MEMORY_CASES),$(eval $(call variant,$(m))))
 # ROM image through a reset and prints CASLINK OK when CASGO changed the reset;
 # SHORT.CAS, a BASIC program that BLOADs a binary whose block is one byte short, so
 # that BLOAD reads the next header's first byte, then BLOADs TEST.CAS's binary by
-# its name and prints SHORT OK.
+# its name and prints SHORT OK; DOWN.CAS, a binary whose data holds a search for
+# RAM for page 0 from slot 3 down, and that prints DOWN OK.
 $(BUILD)/%.bin: test/%.asm $(SJASMPLUS)
 	@mkdir -p $(BUILD)
 	$(SJASMPLUS) --nologo --msg=war --raw=$@ $<
@@ -160,6 +161,9 @@ $(BUILD)/EXPTBL.CAS: tools/mkcas.py test/exptblok.bas $(BUILD)/exptblok.bin
 
 $(BUILD)/CASLINK.CAS: tools/mkcas.py $(BUILD)/caslinkok.bin
 	python3 -I tools/mkcas.py $@ binary CASLNK 9000 9000 $(BUILD)/caslinkok.bin
+
+$(BUILD)/DOWN.CAS: tools/mkcas.py $(BUILD)/downok.bin
+	python3 -I tools/mkcas.py $@ binary DOWN 9000 9000 $(BUILD)/downok.bin
 
 $(BUILD)/SLOT3.CAS: tools/mkcas.py $(BUILD)/slot3ok.bin
 	python3 -I tools/mkcas.py $@ binary SLOT3 9000 9000 $(BUILD)/slot3ok.bin
@@ -314,14 +318,19 @@ export SDL_AUDIODRIVER := dummy
 # The test machines: an MSX1 that gets its mapper from a cartridge, and an MSX2
 # whose own 128 KB mapper is CASGO's minimum, both under Nextor from the IDE,
 # and the MSX2 also under MSX-DOS 2 from a floppy. MSX-DOS 2 does not run on an
-# MSX1.
-TEST_MACHINES := vg8020 nms8250 nms8250-dos2
+# MSX1. The third, phc28s, is an MSX1 whose own 16 KB is only in page 3, with a
+# 64 KB RAM cartridge in slot 1 and the mapper in slot 2, below and above it.
+TEST_MACHINES := vg8020 nms8250 nms8250-dos2 phc28s
 
 # IRAM_ is 1 for a machine with internal RAM in a slot of its own, where the R
 # and I variants load, and 0 where they stop with an error.
 IRAM_vg8020            := 1
 IRAM_nms8250           := 0
 IRAM_nms8250-dos2      := 0
+IRAM_phc28s            := 1
+
+# LOW_ is 1 for a machine whose internal RAM's slot is below the mapper's.
+LOW_phc28s             := 1
 
 MACHINE_vg8020         := Philips_VG_8020
 EXTENSIONS_vg8020      := -ext ram512k -ext casgo_ide
@@ -341,13 +350,19 @@ DRIVE_nms8250-dos2     := diska
 DISK_nms8250-dos2      := $(BUILD)/dos2disk
 DISKDEP_nms8250-dos2   := $(BUILD)/dos2disk.stamp
 
+MACHINE_phc28s         := Sanyo_PHC-28S
+EXTENSIONS_phc28s      := -ext ram64k -ext ram512k -ext casgo_ide
+DRIVE_phc28s           := hda
+DISK_phc28s            := $(BUILD)/test.dsk
+DISKDEP_phc28s         := $(BUILD)/test.dsk
+
 
 # Two disks with the same tests: an image that boots Nextor from the IDE, and a
 # folder that openMSX shows as a floppy and that boots MSX-DOS 2. MSX-DOS 2 loads
 # MSXDOS2.SYS through the boot sector's code, which tools/mkdisk.py does not
 # write; openMSX gives a folder a boot sector with that code.
 TEST_FILES := $(BUILD)/CASGO.COM $(VARIANT_COMS) \
-              $(addprefix $(BUILD)/,TEST.CAS SKEWED.CAS BADTYPE.CAS NOHDR.CAS BIG.CAS BASOK.CAS ASCOK.CAS IM2.CAS STUB.CAS NEXT.CAS PARD.CAS NAMCO.CAS CB.CAS DROP.CAS STUBHL.CAS TAPD.CAS HOOK.CAS SHIFT.CAS SLOTS.CAS MODULE.CAS SYDNEY.CAS LEVEL9.CAS PAGE21.CAS PAGE1.CAS KNOWN.CAS KNOWNB.CAS PATCH.CAS CASLINK.CAS EXPTBL.CAS SLOT3.CAS SHORT.CAS)
+              $(addprefix $(BUILD)/,TEST.CAS SKEWED.CAS BADTYPE.CAS NOHDR.CAS BIG.CAS BASOK.CAS ASCOK.CAS IM2.CAS STUB.CAS NEXT.CAS PARD.CAS NAMCO.CAS CB.CAS DROP.CAS STUBHL.CAS TAPD.CAS HOOK.CAS SHIFT.CAS SLOTS.CAS MODULE.CAS SYDNEY.CAS LEVEL9.CAS PAGE21.CAS PAGE1.CAS KNOWN.CAS KNOWNB.CAS PATCH.CAS CASLINK.CAS EXPTBL.CAS SLOT3.CAS SHORT.CAS DOWN.CAS)
 NEXTOR_FILES := $(DL)/NEXTOR.SYS $(DL)/COMMAND2.COM $(TEST_FILES)
 DOS2_FILES   := $(DL)/msxdos2/MSXDOS2.SYS $(DL)/msxdos2/COMMAND2.COM $(TEST_FILES)
 
@@ -395,14 +410,14 @@ $(EMU_MFRSD)/hardwareconfig.xml: emu/casgo_mfrsd.xml $(DL)/$(NEXTOR_MFRSD_ROM)
 # and dexptbl the BASIC loads, dshift, dmodule, dsydney, dlevel9, dpage21, dpage1
 # and dslot3 the memory rules for the slot shift, the slot module, the Sydney
 # engine, Level 9's search for RAM, page 2's slot put in page 1, the search for
-# RAM for page 1 alone and the copy into page 0 of slot 3, dforce cases forced by
-# the option, dknown and dknownb a known tape by block lengths and by first
-# bytes, dpatch a known tape's patch, and dcaslink the change of CasLink3's
-# reset; each checks the variant and option that the detector prints, then the
-# load.
+# RAM for page 1 alone and the copy into page 0 of slot 3, ddown the search for
+# RAM for page 0 from slot 3 down, dforce cases forced by the option, dknown and
+# dknownb a known tape by block lengths and by first bytes, dpatch a known tape's
+# patch, and dcaslink the change of CasLink3's reset; each checks the variant and
+# option that the detector prints, then the load.
 TEST_CASES := bin binr bini bint bas asc im2 tapd stub stubr stubt stubhl next nextr nexti nextt \
               namco pard pardt cs \
-              cb drop hook slots exptbl short detect dnext dnamco dstub dstubhl dpard dcb ddrop dhook dslots dexptbl dshift dmodule dsydney dlevel9 dpage21 dpage1 dslot3 dforce dknown dknownb dpatch dcaslink
+              cb drop hook slots exptbl short detect dnext dnamco dstub dstubhl dpard dcb ddrop dhook dslots dexptbl dshift dmodule dsydney dlevel9 dpage21 dpage1 dslot3 ddown dforce dknown dknownb dpatch dcaslink
 
 test: $(addprefix test-,$(TEST_MACHINES))
 
@@ -415,6 +430,7 @@ test-$(1)-$(2): $(DISKDEP_$(1)) $(EMU_EXT)/hardwareconfig.xml
 	OPENMSX_HOME=$(abspath $(EMU_HOME)) \
 	CASGO_DRIVE=$(DRIVE_$(1)) \
 	CASGO_IRAM=$(IRAM_$(1)) \
+	CASGO_LOW=$(or $(LOW_$(1)),0) \
 	CASGO_DISK=$(abspath $(DISK_$(1))) \
 	CASGO_CASE=$(2) \
 	CASGO_RESULT=$(abspath $(BUILD)/test-$(1)-$(2).result) \
@@ -459,12 +475,14 @@ games: $(BUILD)/games.dsk $(EMU_EXT)/hardwareconfig.xml
 # CORPUS_MACHINES names the machines to run: vg8020 and nms8250 by default, both
 # with the Sunrise IDE. The machines vg8020-mfrsd and nms8250-mfrsd have a
 # MegaFlashROM SCC+ SD in place of the Sunrise IDE. The cartridge brings its own
-# mapper, so vg8020-mfrsd runs without the memory cartridge. For example:
+# mapper, so vg8020-mfrsd runs without the memory cartridge. The machine phc28s
+# is the test machine of that name. For example:
 #   make corpus CORPUS=tapes CORPUS_MACHINES=vg8020-mfrsd
 CORPUS_vg8020        := vg8020:$(MACHINE_vg8020):ram512k,casgo_ide
 CORPUS_nms8250       := nms8250:$(MACHINE_nms8250):casgo_ide
 CORPUS_vg8020-mfrsd  := vg8020-mfrsd:$(MACHINE_vg8020):casgo_mfrsd
 CORPUS_nms8250-mfrsd := nms8250-mfrsd:$(MACHINE_nms8250):casgo_mfrsd
+CORPUS_phc28s        := phc28s:$(MACHINE_phc28s):ram64k,ram512k,casgo_ide
 CORPUS_MACHINES ?= vg8020 nms8250
 .PHONY: corpus
 corpus: $(BUILD)/CASGO.COM $(VARIANT_COMS) $(DL)/NEXTOR.SYS $(DL)/COMMAND2.COM $(EMU_EXT)/hardwareconfig.xml \

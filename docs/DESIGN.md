@@ -77,7 +77,9 @@ routines do not catch. Each has a letter.
 A memory case says where the game's pages 2 and 3 and T0 are. On a cassette machine,
 all RAM is in one slot. Some games search the slots for RAM and take the first they
 find, and the memory case keeps T0 out of their way. Each variant is one memory
-case.
+case. In the table, an MSX1's own RAM is a slot that has RAM in pages 2 and 3 and no
+mapper. An MSX1 with 16 KB of RAM, such as the Sanyo PHC-28S, has no RAM in page 2.
+On such a machine, a RAM cartridge serves as the own RAM.
 
 | Letter | Game's pages 2 and 3 | T0 |
 |---|---|---|
@@ -85,6 +87,15 @@ case.
 | `R` | An MSX1's own RAM, apart from the mapper | The mapper |
 | `I` | An MSX1's own RAM | That RAM's page 0 |
 | `T` | The mapper | An MSX1's own RAM's page 0, or on an MSX2, page 0 of a second RAM slot such as the machine's own RAM beside a RAM cartridge |
+
+Among the games that search the slots for RAM, some search for RAM in page 0 from
+slot 3 down. Such a search finds the own RAM first when the own RAM's slot is above
+the mapper's slot, as on a Philips VG-8020. When the own RAM's slot is below the
+mapper's slot, as with a RAM cartridge in a lower slot than a Carnivore2, the search
+finds the mapper first. In `M` and `R` the mapper's page 0 holds T0, so on such a
+machine the detector moves T0 to the own RAM's page 0 and keeps the game's pages 2
+and 3 where they were. The detector picks `T` where it would pick `M`, and `I` where
+it would pick `R`, for a known tape too.
 
 ## The source
 

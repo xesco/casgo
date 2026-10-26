@@ -3,12 +3,14 @@
 ; in its page 0. Part of stage 2's code, in page 2.
 
 ; Finds the internal RAM: the first primary slot, not expanded and not page 3's,
-; with RAM at FFFEh, and in the I and T variants with RAM at 3FFEh too, where T0
-; goes. In the T variants, when there is none, it takes the first second RAM
-; instead: a subslot with RAM at 3FFEh in an expanded primary slot that is not
-; page 3's, as an MSX2's own RAM is beside a RAM cartridge. Sets iram_slot to the
-; primary slot, iram_sub to the subslot or 0FFh, and iram_toggle to the XOR of
-; the primary slot's bits and page 3's, in bits 7-6, or iram_toggle to 0 when
+; with RAM at FFFEh and BFFEh, in the game's pages 3 and 2, and in the I and T
+; variants with RAM at 3FFEh too, where T0 goes. An MSX1 with 16 KB, such as the
+; Sanyo PHC-28S, has its own RAM only in page 3, and a RAM cartridge then holds
+; the internal RAM. In the T variants, when there is none, it takes the first
+; second RAM instead: a subslot with RAM at 3FFEh in an expanded primary slot that
+; is not page 3's, as an MSX2's own RAM is beside a RAM cartridge. Sets iram_slot
+; to the primary slot, iram_sub to the subslot or 0FFh, and iram_toggle to the XOR
+; of the primary slot's bits and page 3's, in bits 7-6, or iram_toggle to 0 when
 ; there is none. Stage 1 calls it from page 2, with interrupts off meanwhile: the
 ; search switches page 3 and page 0, so the stack moves to page 2. Leaves
 ; interrupts off.
@@ -45,6 +47,16 @@ iram_find:
         out (PSLOT),a
         ld hl,0FFFEh
         call iram_probe
+        jr nz,.next
+        ld a,(iram_a8)
+        ld d,a          ; D = the slot register to put back
+        and 0CFh
+        ld e,a
+        ld a,b
+        rrca
+        rrca            ; the slot in bits 5-4
+        or e
+        call iram_page2 ; in page 0, because it switches page 2
         jr nz,.next
         IF T0_IRAM
         ld a,(iram_a8)  ; T0 goes in this RAM's page 0, so it needs RAM there

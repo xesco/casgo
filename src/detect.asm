@@ -357,9 +357,21 @@ check:
         ld de,search_bytes
         ld b,(search_bytes_end-search_bytes)/2
         call match_before
-        jp nz,.done
+        jr nz,.search_de
         ld a,1
         ld (d_move),a
+        ld (d_down),a
+        jp .done
+.search_de:
+        ; The same search with DE for the slot. It sets d_down alone, so on a
+        ; machine whose internal RAM's slot is above the mapper's the other rules
+        ; pick as they did before CASGO knew this form
+        ld de,search_de_bytes
+        ld b,(search_de_bytes_end-search_de_bytes)/2
+        call match_before
+        jp nz,.done
+        ld a,1
+        ld (d_down),a
         jp .done
 .slot1:
         ; The slot calls: the loader copies code into the RAM it finds for page
@@ -396,6 +408,7 @@ check:
         jp nz,.done
         ld a,1
         ld (d_move),a
+        ld (d_down),a
         jp .done
 .header:
         ld de,cas_header
@@ -839,6 +852,7 @@ pick:
         jr z,.picked_known
         ld a,b
 .known_set:
+        call low_letter
         ld (opt_mem),a
 .picked_known:
         ld hl,variant+5
@@ -907,8 +921,9 @@ pick:
         ; code that needs it (d_t), and I when the loader case is S, or the file
         ; writes the slot register, never reads EXPTBL and never takes the internal
         ; RAM for page 0, by a slot move or the BASIC case's slot calls; M on a
-        ; machine without internal RAM. On a machine with a second RAM instead, the
-        ; same rules give T for I and M for R.
+        ; machine without internal RAM. The letter then goes through low_letter.
+        ; On a machine with a second RAM instead, the same rules give T for I and M
+        ; for R.
         ld a,(has_r)
         ld b,a
         ld a,(has_t2)
@@ -950,6 +965,7 @@ pick:
 .r:
         ld a,"R"
 .memory_letter:
+        call low_letter
         ld b,a
         ld a,(has_t2)
         or a
@@ -971,6 +987,32 @@ pick:
         ld (hl),a
         inc hl
         ld (hl),0
+        ret
+
+; Returns in A the memory letter for the letter in A. A search from slot 3 down
+; for RAM for page 0 (d_down) takes the first RAM it finds, which is the internal
+; RAM only when the internal RAM's slot is above the mapper's. When it is below
+; (has_low), the search finds the mapper, whose page 0 holds T0 in M and R, so
+; such a file gets the letter that puts T0 in the internal RAM and keeps pages 2
+; and 3 where they were: T for M and I for R. Keeps BC.
+low_letter:
+        push bc
+        ld b,a
+        ld a,(d_down)
+        ld c,a
+        ld a,(has_low)
+        and c
+        ld a,b
+        pop bc
+        ret z
+        cp "M"
+        jr nz,.r
+        ld a,"T"
+        ret
+.r:
+        cp "R"
+        ret nz
+        ld a,"I"
         ret
 
 ; The known tapes: a tape matches an entry of known_table when its blocks from
@@ -1451,6 +1493,7 @@ d_stub:    db 0         ; 1 when the file holds the stub's build sequence
 d_out_any: db 0         ; 1 when the file writes the slot register
 d_exptbl:  db 0         ; 1 when the file reads EXPTBL with LD A,(0FCC1h)
 d_move:    db 0         ; 1 when the file takes the internal RAM for page 0
+d_down:    db 0         ; 1 when it finds that RAM by a search from slot 3 down
 d_caslink: db 0         ; 1 when the file holds CasLink3's text: no calls case
 d_module:  db 0         ; 1 when the file holds code that needs M
 d_slot3:   db 0         ; 1 when the file copies into page 0 of slot 3
@@ -1464,14 +1507,33 @@ d_rom_end: ds 3         ; the end of the bytes a binary file loads below 8000h
 d_page0:   db 0         ; 1 when a binary file loads from page 0 to page 1 or above
 cas_path: ds PATH_SIZE
 
+; Puts A in the slot register and returns Z when the byte at BFFEh is then RAM,
+; with the slot register back to D. probe calls it to test page 2 of a slot, with
+; interrupts off. probe, its variables and its stack are in page 2, so this is in
+; page 0, and it uses no stack until page 2 is back.
+p_page2:
+        out (PSLOT),a   ; page 2: the slot tried
+        ld hl,0BFFEh
+        ld a,(hl)
+        cpl
+        ld (hl),a
+        cp (hl)
+        cpl
+        ld (hl),a
+        ld a,d
+        out (PSLOT),a   ; page 2 back, and with it the stack
+        ret
+        assert $ <= 8000h       ; it switches page 2, so it must stay out of it
+
 ; The internal RAM search, assembled for PROBE in page 2 and copied there.
 probe_image:
         disp PROBE
 
 ; Finds whether the machine has internal RAM: a primary slot, not expanded and not
-; page 3's, with RAM at FFFEh (has_r), and such a slot with RAM at 3FFEh too
-; (has_i), as the R and I variants search (iram.asm). Interrupts are off meanwhile,
-; and the stack is here, because the search switches pages 3 and 0.
+; page 3's, with RAM at FFFEh and BFFEh (has_r), and such a slot with RAM at 3FFEh
+; too (has_i), as the R and I variants search (iram.asm), and whether that slot is
+; below the mapper's (has_low). Interrupts are off meanwhile, and the stack is
+; here, because the search switches pages 3 and 0.
 probe:
         di
         ld (p_sp),sp
@@ -1502,6 +1564,16 @@ probe:
         ld hl,0FFFEh
         call p_ram
         jr nz,.next
+        ld a,(p_a8)
+        ld d,a          ; D = the slot register to put back
+        and 0CFh
+        ld e,a
+        ld a,b
+        rrca
+        rrca            ; the slot in bits 5-4
+        or e
+        call p_page2    ; in page 0, because it switches page 2
+        jr nz,.next
         ld a,1
         ld (has_r),a
         ld a,(p_a8)
@@ -1513,6 +1585,14 @@ probe:
         jr nz,.next
         ld a,1
         ld (has_i),a
+        ld a,(p_a8)
+        rlca
+        rlca
+        and 03h         ; page 3's slot, the mapper's
+        cp c
+        jr c,.done      ; the internal RAM's slot is above it
+        ld a,1
+        ld (has_low),a
         jr .done
 .next:
         inc c
@@ -1624,6 +1704,7 @@ p_ram:
 
 has_r:  db 0
 has_i:  db 0
+has_low: db 0           ; 1 when has_i's slot is below the mapper's
 has_t2: db 0            ; 1 for a second RAM after the mapper's slot
 p_sp:   dw 0
 p_a8:   db 0

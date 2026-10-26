@@ -47,6 +47,14 @@ search_bytes:
         db 1, 0CBh, 2, 09h, 3, 0FCh, 4, 0C1h, 5, 21h, 6, 00h, 7, 06h, 8, 03h, 9, 0Eh
 search_bytes_end:
 
+; The same search with DE for the slot, LD A,03h / LD (nn),A / LD E,A /
+; LD D,00h / LD HL,0FCC1h / ADD HL,DE / BIT 7,(HL): the bytes before the 7Eh but
+; nn's.
+search_de_bytes:
+        db 1, 0CBh, 2, 19h, 3, 0FCh, 4, 0C1h, 5, 21h, 6, 00h, 7, 16h, 8, 5Fh
+        db 11, 32h, 12, 03h, 13, 3Eh
+search_de_bytes_end:
+
 ; The end of a slot module's copy of ENASLT, LD B,A / POP AF / AND A / RET,
 ; and the CALL 0138h, RSLREG, after it: the module runs ENASLT from page 3, so
 ; it needs page 3 in the mapper's slot. The bytes before CALL 0138h's last, 01h,

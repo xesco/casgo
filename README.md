@@ -117,11 +117,12 @@ needs and the bytes it patches in some of them.
 ## Testing
 
 The tests run CASGO in openMSX on test machines that boot Nextor or MSX-DOS 2 from a
-disk image. They need openMSX and three ROM files in its system ROMs folder:
+disk image. They need openMSX and four ROM files in its system ROMs folder:
 
 | ROM | Note |
 |---|---|
-| The Philips VG-8020's BIOS and BASIC | The MSX1 test machine |
+| The Philips VG-8020's BIOS and BASIC | An MSX1 test machine, with 64 KB of RAM of its own |
+| The Sanyo PHC-28S's BIOS and BASIC | An MSX1 test machine with 16 KB of RAM of its own, which gets a RAM cartridge in a lower slot than its mapper |
 | The Philips NMS 8250's ROMs | The MSX2 test machine |
 | The MSX-DOS 2 cartridge's ROM | For the test machine that boots MSX-DOS 2 |
 
